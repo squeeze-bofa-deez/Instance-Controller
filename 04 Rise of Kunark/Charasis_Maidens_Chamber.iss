@@ -479,7 +479,7 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["-40.293224,-17.622501,180.598999"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
 		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 100
+		wait 200
 		
 		Obj_OgreIH:ChangeCampSpot["-40.396793,-17.651960,239.230804"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
