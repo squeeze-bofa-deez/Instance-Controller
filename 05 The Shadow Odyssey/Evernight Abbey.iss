@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Evernight Abbey | Author: The Marty Party | Date: 31 Jan 2024 | Version: 1.0
+; Title: Evernight Abbey | Author: The Marty Party | Date: 31 Jan 2024 | Version: 1.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_abbey"
@@ -28,7 +28,7 @@ objectdef Object_Instance
             ogre ica
             wait 2
             
-			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 1.0
+			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 1.1
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -120,7 +120,7 @@ objectdef Object_Instance
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
-			/*
+			
 			;Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
@@ -133,9 +133,46 @@ objectdef Object_Instance
             {                
                 return FALSE
             }		
-			*/
+			
 			_StartingPoint:Inc
 		}
+
+		call Obj_OgreUtilities.HandleWaitForZoning
+		wait 10
+		Obj_OgreIH:SetCampSpot
+		wait 10        
+		Obj_OgreIH:ChangeCampSpot["-421.231506,8.953549,-48.607170"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		Obj_OgreIH:ChangeCampSpot["-477.085693,9.662611,25.407948"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		Obj_OgreIH:ChangeCampSpot["-450.507050,14.060266,52.865227"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		Obj_OgreIH:ChangeCampSpot["-401.110016,16.418085,41.441978"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		Obj_OgreIH:ChangeCampSpot["-377.414764,16.795065,56.756161"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		oc !c -ApplyVerbForWho igw:${Me.Name} "crypt_door_to_mistmoore_portal_chamber" "Use"
+		wait 20
+
+		Obj_OgreIH:ChangeCampSpot["-350.337402,0.854701,10.039196"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
 
         return TRUE
     }
@@ -252,6 +289,11 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["131.402985,-6.811979,-105.160759"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		eq2execute target an enraged
+		wait 100
+		call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
 
         eq2execute target Pythoness Olrga
@@ -382,14 +424,14 @@ objectdef Object_Instance
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
 
-		Obj_OgreIH:ChangeCampSpot["-131.846878,-6.816852,-104.121811"]
+		Obj_OgreIH:ChangeCampSpot["-131.635986,-6.786491,-118.323433"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
 
-		Obj_OgreIH:ChangeCampSpot["-131.635986,-6.786491,-118.323433"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-        call Obj_OgreUtilities.HandleWaitForCombat
+		eq2execute target an enraged
+		wait 100
+		call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
 
         eq2execute target Pythoness Olrga
@@ -702,6 +744,11 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["27.566023,-25.562721,-223.475418"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
+		wait 10
+
+		eq2execute target an enraged
+		wait 100
+		call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
 
         OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
@@ -1138,6 +1185,9 @@ objectdef Object_Instance
 			echo TextTimeLeft ${gcsRetValue.Element["TextTimeLeft"]}
 		}
 		else
+			echo GetZoneData was false
+	}
+}
 			echo GetZoneData was false
 	}
 }
