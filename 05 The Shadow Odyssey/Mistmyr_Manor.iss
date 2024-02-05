@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Mistmyr Manor | Author: The Marty Party | Date: 24 Jan 2024 | Version: 1.0
+; Title: Mistmyr Manor | Author: The Marty Party | Date: 24 Jan 2024 | Version: 1.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_manor"
@@ -43,7 +43,7 @@ objectdef Object_Instance
                 return FALSE
             }
 			*/
-			echo ${Time} \agStarting to auto-run ${sZoneName} Version 1.0
+			echo ${Time} \agStarting to auto-run ${sZoneName} Version 1.1
 			
 			Obj_OgreIH:Actor_Click["To the Mistmyr Manor"]
 			call Obj_OgreUtilities.HandleWaitForZoning
@@ -248,61 +248,51 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["72.889755,-0.241319,0.127970"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["95.316177,1.417225,0.243114"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["130.715546,10.585276,-0.215772"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["174.204865,10.517553,-0.043021"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["174.843353,10.578419,-64.797745"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["174.966660,10.517538,-83.166779"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["175.080078,10.182070,-104.447548"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["175.586441,10.182067,-126.458405"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["175.278198,10.182072,-155.702499"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["177.231796,10.517543,-170.898773"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -313,12 +303,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 10		
+		wait 50
 
         return TRUE
     }
@@ -330,67 +319,56 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["175.533600,10.414883,-162.288620"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["175.334259,10.182074,-84.975357"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["148.842728,10.517552,-94.354874"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["148.097992,17.588560,-121.786819"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["145.576935,22.803297,-145.393631"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["131.635590,22.889044,-145.357330"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["122.816666,22.803282,-131.838287"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["80.971832,22.803288,-131.242020"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["48.295013,22.808729,-132.128891"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["36.130943,22.808729,-120.680000"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["35.808590,22.808729,-95.528564"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -401,12 +379,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}	
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 10		
+		wait 50		
 
         return TRUE
     }
@@ -418,37 +395,31 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["35.286964,22.808729,-124.894974"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["53.424301,22.808729,-133.804214"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["68.849518,22.803284,-132.284637"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["80.889229,22.803288,-132.371170"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["81.156685,22.447508,-186.992416"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["93.143196,22.447495,-205.176468"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -459,12 +430,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 10
+		wait 50
 
         return TRUE
     }
@@ -476,61 +446,51 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["81.099365,22.622221,-223.400421"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["80.668152,22.803282,-255.280014"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["81.658051,22.803083,-285.819275"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["69.138138,22.803083,-294.846252"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["36.856422,22.803068,-294.703491"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["29.612865,22.803068,-316.645142"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["29.596317,22.854256,-326.632233"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["49.300056,22.901798,-333.591339"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["48.118523,24.588911,-348.243866"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["37.576645,25.524473,-351.502441"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -541,12 +501,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}	
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 10		
+		wait 50		
 
         return TRUE
     }
@@ -561,109 +520,91 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["46.845684,-0.563871,0.052942"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["72.889755,-0.241319,0.127970"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["130.715546,10.585276,-0.215772"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["174.204865,10.517553,-0.043021"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["174.843353,10.578419,-64.797745"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["175.106262,10.506819,-83.488983"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["200.354187,10.517552,-96.199120"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["203.345169,22.803293,-145.398148"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["227.640045,22.803282,-131.871841"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["250.048981,22.822065,-132.248901"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10		
 
 		Obj_OgreIH:ChangeCampSpot["257.825745,22.822065,-146.999374"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["257.696777,22.682064,-173.912994"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["257.783508,29.765593,-205.308563"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["218.129120,29.765745,-205.102783"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["206.378479,29.765730,-217.954956"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["206.586914,29.774595,-242.582245"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["199.399765,29.774595,-255.983810"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Obj_OgreIH:ChangeCampSpot["176.628418,29.774595,-255.969864"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10
 
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -674,12 +615,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}	
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 10		
+		wait 50		
 
         return TRUE
     }
@@ -691,7 +631,6 @@ objectdef Object_Instance
 		Obj_OgreIH:ChangeCampSpot["161.558563,29.774595,-255.848511"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreIH.Get_Chest
 		wait 10	
 
 		;// Opening secret door
@@ -724,12 +663,11 @@ objectdef Object_Instance
 		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
 		{
 			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
-			return TRUE
 		}
 
-		call Obj_OgreIH.Get_Chest
+		eq2execute summon
 		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 100		
+		wait 50		
 
         return TRUE
     }
