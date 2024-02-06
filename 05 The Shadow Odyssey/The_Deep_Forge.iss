@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: The Deep Forge | Author: Unknown, The Marty Party | Date: 24 Jan 2024 | Version: 2.0
+; Title: The Deep Forge | Author: Unknown, The Marty Party | Date: 06 Feb 2024 | Version: 2.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_najena_forge"
@@ -27,30 +27,18 @@ objectdef Object_Instance
 		{
             ogre ica
             wait 2
-            /*
-			;Check if the zone can be reset.
-			call This.CheckZoneResetStatus
+
+			call Obj_OgreIH.CD.GetIntoZone
 			if !${Return}
-            {             
-                return FALSE
-            }
-			;Reset the zone
-			call This.ResetZone
-			if !${Return}
-            {                
-                return FALSE
-            }
-			*/
-			echo ${Time} \agStarting to auto-run ${sZoneName} Version 2.0
+			{
+				Obj_OgreIH:Actor_Click["To the Deep Forge"]
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+
+			echo ${Time} \agStarting to auto-run ${sZoneName} Version 2.1
 			
-			Obj_OgreIH:Actor_Click["To the Deep Forge"]
-			call Obj_OgreUtilities.HandleWaitForZoning
-			call Obj_OgreIH.ZoneNavigation.GetIntoZone "${sZoneName}"
-            if !${Return}
-            {
-                Obj_OgreIH:Message_FailedZone
-                return FALSE
-            }
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
 			
@@ -117,7 +105,7 @@ objectdef Object_Instance
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
-			/*
+			
 			;Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
@@ -130,7 +118,7 @@ objectdef Object_Instance
             {                
                 return FALSE
             }		
-			*/
+			
 			_StartingPoint:Inc
 		}
 
