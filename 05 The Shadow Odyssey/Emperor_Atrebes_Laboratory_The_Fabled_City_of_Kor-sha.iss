@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Emperor Atrebe's Laboratory: The Fabled City of Kor-sha | Author: Unknown, The Marty Party | Date: 30 Jan 2024 | Version: 2.0
+; Title: Emperor Atrebe's Laboratory: The Fabled City of Kor-sha | Author: Unknown, The Marty Party | Date: 06 Feb 2024 | Version: 2.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_korsha"
@@ -28,7 +28,16 @@ objectdef Object_Instance
             ogre ica
             wait 2
             
-			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 2.0
+			call Obj_OgreIH.CD.GetIntoZone
+			if !${Return}
+			{
+				Obj_OgreIH:Actor_Click["Atrebe's Laboratory: The Fabled City of Kor-sha"]
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+
+			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 2.1
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -120,7 +129,7 @@ objectdef Object_Instance
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
-			/*
+			
 			;Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
@@ -133,7 +142,7 @@ objectdef Object_Instance
             {                
                 return FALSE
             }		
-			*/
+			
 			_StartingPoint:Inc
 		}
 
@@ -919,10 +928,11 @@ objectdef Object_Instance
                 waitframe
         }
 
-        call Obj_OgreUtilities.HandleWaitForGroupDistance 2  
+        wait 10
+        call Obj_OgreUtilities.WaitWhileGroupMembersDead
+        wait 10
         eq2execute summon
         wait 30
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
 		
         return TRUE
     }
