@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Mistmyr Manor | Author: The Marty Party | Date: 24 Jan 2024 | Version: 1.1
+; Title: Mistmyr Manor | Author: The Marty Party | Date: 06 Feb 2024 | Version: 1.2
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_manor"
@@ -26,33 +26,20 @@ objectdef Object_Instance
 	{        
 		if ${_StartingPoint} == 0
 		{
-			; Load Ogre Instance Controller Assister - it handles the internal stuff.
             ogre ica
             wait 2
-            /*
-			;Check if the zone can be reset.
-			call This.CheckZoneResetStatus
+            
+			call Obj_OgreIH.CD.GetIntoZone
 			if !${Return}
-            {             
-                return FALSE
-            }
-			;Reset the zone
-			call This.ResetZone
-			if !${Return}
-            {                
-                return FALSE
-            }
-			*/
-			echo ${Time} \agStarting to auto-run ${sZoneName} Version 1.1
+			{
+				Obj_OgreIH:Actor_Click["To the Mistmyr Manor"]
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
 			
-			Obj_OgreIH:Actor_Click["To the Mistmyr Manor"]
-			call Obj_OgreUtilities.HandleWaitForZoning
-			call Obj_OgreIH.ZoneNavigation.GetIntoZone "${sZoneName}"
-            if !${Return}
-            {
-                Obj_OgreIH:Message_FailedZone
-                return FALSE
-            }
+			echo ${Time} \agStarting to auto-run ${sZoneName} Version 1.2
+			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
 			
@@ -155,7 +142,7 @@ objectdef Object_Instance
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
-			/*
+			
 			;Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
@@ -168,9 +155,32 @@ objectdef Object_Instance
             {                
                 return FALSE
             }		
-			*/
+			
 			_StartingPoint:Inc
 		}
+
+		call Obj_OgreUtilities.HandleWaitForZoning
+		wait 10
+		Obj_OgreIH:SetCampSpot
+		wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -421.231506 8.953549 -48.607170
+		wait 50
+		oc !c -ChangeCampSpotWho ${Me.Name} -477.085693 9.662611 25.407948
+		wait 70
+		oc !c -ChangeCampSpotWho ${Me.Name} -450.507050 14.060266 52.865227
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -401.110016 16.418085 41.441978
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -377.414764 16.795065 56.756161
+		wait 30
+
+		oc !c -ApplyVerbForWho igw:${Me.Name} "crypt_door_to_mistmoore_portal_chamber" "use"
+		wait 20
+
+		oc !c -ChangeCampSpotWho ${Me.Name} -350.337402 0.854701 10.039196
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -339.455017 0.863179 6.307797
+		wait 40
 
         return TRUE
     }
