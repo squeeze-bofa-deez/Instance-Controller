@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Evernight Abbey | Author: The Marty Party | Date: 31 Jan 2024 | Version: 1.1
+; Title: Evernight Abbey | Author: The Marty Party | Date: 06 Feb 2024 | Version: 1.2
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_abbey"
@@ -28,7 +28,16 @@ objectdef Object_Instance
             ogre ica
             wait 2
             
-			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 1.1
+			call Obj_OgreIH.CD.GetIntoZone
+			if !${Return}
+			{
+				Obj_OgreIH:Actor_Click["Portal to Evernight Abbey"]
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+
+			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 1.2
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -140,39 +149,25 @@ objectdef Object_Instance
 		call Obj_OgreUtilities.HandleWaitForZoning
 		wait 10
 		Obj_OgreIH:SetCampSpot
-		wait 10        
-		Obj_OgreIH:ChangeCampSpot["-421.231506,8.953549,-48.607170"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -421.231506 8.953549 -48.607170
+		wait 50
+		oc !c -ChangeCampSpotWho ${Me.Name} -477.085693 9.662611 25.407948
+		wait 70
+		oc !c -ChangeCampSpotWho ${Me.Name} -450.507050 14.060266 52.865227
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -401.110016 16.418085 41.441978
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -377.414764 16.795065 56.756161
+		wait 30
 
-		Obj_OgreIH:ChangeCampSpot["-477.085693,9.662611,25.407948"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 10
-
-		Obj_OgreIH:ChangeCampSpot["-450.507050,14.060266,52.865227"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 10
-
-		Obj_OgreIH:ChangeCampSpot["-401.110016,16.418085,41.441978"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 10
-
-		Obj_OgreIH:ChangeCampSpot["-377.414764,16.795065,56.756161"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 10
-
-		oc !c -ApplyVerbForWho igw:${Me.Name} "crypt_door_to_mistmoore_portal_chamber" "Use"
+		oc !c -ApplyVerbForWho igw:${Me.Name} "crypt_door_to_mistmoore_portal_chamber" "use"
 		wait 20
 
-		Obj_OgreIH:ChangeCampSpot["-350.337402,0.854701,10.039196"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat
-		wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -350.337402 0.854701 10.039196
+		wait 40
+		oc !c -ChangeCampSpotWho ${Me.Name} -339.455017 0.863179 6.307797
+		wait 40
 
         return TRUE
     }
@@ -1058,8 +1053,11 @@ objectdef Object_Instance
         ;// Getting buff
         oc !c -ChangeCampSpotWho ${Me.Name} -11.092109 -18.774445 -362.278107
         wait 100
+		oc !c -Pause igw:${Me.Name}
         oc !c -ApplyVerbForWho igw:${Me.Name} "lubesh sarcophagi" "Consume the Power of the Lubesh"
         wait 50
+		oc !c -Resume igw:${Me.Name}
+		wait 10
         oc !c -ChangeCampSpotWho ${Me.Name} -54.603020 -16.869503 -376.467377
         wait 100
 
@@ -1139,8 +1137,12 @@ objectdef Object_Instance
 		wait 10
 
         ;// Setup for Named
+		oc !c -Pause igw:${Me.Name}
+		wait 10
         eq2execute useability 3241699042
-        wait 60
+        wait 30
+		oc !c -Resume igw:${Me.Name}
+		wait 10
         relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Lifeburn" TRUE TRUE
         relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Undead Horde" TRUE TRUE
         wait 30
@@ -1185,9 +1187,6 @@ objectdef Object_Instance
 			echo TextTimeLeft ${gcsRetValue.Element["TextTimeLeft"]}
 		}
 		else
-			echo GetZoneData was false
-	}
-}
 			echo GetZoneData was false
 	}
 }
