@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Miragul's Phylactery: The Crucible | Author: Unknown, The Marty Party | Date: 26 Jan 2024 | Version: 2.0
+; Title: Miragul's Phylactery: The Crucible | Author: Unknown, The Marty Party | Date: 06 Feb 2024 | Version: 2.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_miragul_shard"
@@ -57,7 +57,18 @@ objectdef Object_Instance
             ogre ica
             wait 2
             
-			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 2.0
+			call Obj_OgreIH.CD.GetIntoZone
+			if !${Return}
+			{
+				Obj_OgreIH:Actor_Click["Miragul's Phylactery"]
+                wait 10
+                oc !c -Door 3 ${Me.Name}
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+
+			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 2.1
             echo ${Time} \amNOTE: This needs to move your mouse in order to place the items properly. DO NOT touch your mouse at all and you should probably leave your session running the script on top.
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
@@ -139,7 +150,7 @@ objectdef Object_Instance
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
-			/*
+			
 			;Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
@@ -152,7 +163,7 @@ objectdef Object_Instance
             {                
                 return FALSE
             }		
-			*/
+			
 			_StartingPoint:Inc
 		}
 
