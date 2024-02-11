@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Evernight Abbey | Author: The Marty Party | Date: 06 Feb 2024 | Version: 1.2
+; Title: Evernight Abbey | Author: The Marty Party | Date: 06 Feb 2024 | Version: 1.3
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_abbey"
@@ -16,7 +16,7 @@ function main(int _StartingPoint=0)
 
 atom atexit()
 {
-	echo ${Time} \agFinished auto-running ${sZoneName}.
+	echo ${Time}: \agFinished auto-running ${sZoneName}.
 }
 
 objectdef Object_Instance
@@ -37,7 +37,7 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time} \agStarting to auto-run ${sZoneName}. Version: 1.2
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.2
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -853,7 +853,7 @@ objectdef Object_Instance
         {
             oc !c -ChangeCampSpotWho ${Me.Name} 10.587206 -18.800116 -343.524292
             wait 20
-            oc !c -ChangeCampSpotWho ${Me.Name} 34.112663 -16.886560 -311.321136
+            oc !c -ChangeCampSpotWho ${Me.Name} 35.921532 -16.844591 -307.986328
             wait 60
             while ${Me.InCombat}
                 waitframe
@@ -868,7 +868,7 @@ objectdef Object_Instance
             wait 100
         }
 
-		Obj_OgreIH:ChangeCampSpot["34.112663,-16.886560,-311.321136"]
+		Obj_OgreIH:ChangeCampSpot["35.921532,-16.844591,-307.986328"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
@@ -913,7 +913,7 @@ objectdef Object_Instance
         {
             oc !c -ChangeCampSpotWho ${Me.Name} 17.302242 -18.781418 -364.246613
             wait 20
-            oc !c -ChangeCampSpotWho ${Me.Name} 55.363964 -16.845312 -376.716675
+            oc !c -ChangeCampSpotWho ${Me.Name} 59.372665 -16.844606 -377.859467
             wait 60
             while ${Me.InCombat}
                 waitframe
@@ -928,7 +928,7 @@ objectdef Object_Instance
             wait 100
         }
 
-		Obj_OgreIH:ChangeCampSpot["55.363964, -16.845312, -376.716675"]
+		Obj_OgreIH:ChangeCampSpot["59.372665,-16.844606,-377.859467"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
@@ -973,7 +973,7 @@ objectdef Object_Instance
         {
             oc !c -ChangeCampSpotWho ${Me.Name} -0.439714 -18.794941 -377.873138
             wait 20
-            oc !c -ChangeCampSpotWho ${Me.Name} -0.533178 -16.855110 -416.139313
+            oc !c -ChangeCampSpotWho ${Me.Name} -0.440606 -16.844593 -421.273102
             wait 60
             while ${Me.InCombat}
                 waitframe
@@ -988,7 +988,7 @@ objectdef Object_Instance
             wait 100
         }
 
-		Obj_OgreIH:ChangeCampSpot["-0.533178,-16.855110,-416.139313"]
+		Obj_OgreIH:ChangeCampSpot["-0.440606,-16.844593,-421.273102"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
@@ -1033,7 +1033,7 @@ objectdef Object_Instance
         {
             oc !c -ChangeCampSpotWho ${Me.Name} -18.839737 -18.790751 -364.647766
             wait 20
-            oc !c -ChangeCampSpotWho ${Me.Name} -56.143688 -16.852833 -376.678986
+            oc !c -ChangeCampSpotWho ${Me.Name} -60.903366 -16.844593 -378.312073
             wait 60
             while ${Me.InCombat}
                 waitframe
@@ -1046,7 +1046,7 @@ objectdef Object_Instance
             oc !c -ChangeCampSpotWho ${Me.Name} -74.866692 -14.838219 -382.874512
             call Obj_OgreUtilities.HandleWaitForCampSpot 20
             wait 100
-            oc !c -ChangeCampSpotWho ${Me.Name} -56.143688 -16.852833 -376.678986
+            oc !c -ChangeCampSpotWho ${Me.Name} -60.903366 -16.844593 -378.312073
             wait 60
         }
 
@@ -1054,14 +1054,15 @@ objectdef Object_Instance
         oc !c -ChangeCampSpotWho ${Me.Name} -11.092109 -18.774445 -362.278107
         wait 100
 		oc !c -Pause igw:${Me.Name}
+		wait 30
         oc !c -ApplyVerbForWho igw:${Me.Name} "lubesh sarcophagi" "Consume the Power of the Lubesh"
         wait 50
 		oc !c -Resume igw:${Me.Name}
 		wait 10
-        oc !c -ChangeCampSpotWho ${Me.Name} -54.603020 -16.869503 -376.467377
+        oc !c -ChangeCampSpotWho ${Me.Name} -60.903366 -16.844593 -378.312073
         wait 100
 
-		Obj_OgreIH:ChangeCampSpot["-54.603020,-16.869503,-376.467377"]
+		Obj_OgreIH:ChangeCampSpot["-60.903366,-16.844593,-378.312073"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
@@ -1106,7 +1107,7 @@ objectdef Object_Instance
         {
             oc !c -ChangeCampSpotWho ${Me.Name} -11.759991 -18.804905 -342.939178
             wait 20
-            oc !c -ChangeCampSpotWho ${Me.Name} -34.124115 -16.858158 -312.102722
+            oc !c -ChangeCampSpotWho ${Me.Name} -37.278206 -16.844591 -307.949371
             wait 60
             while ${Me.InCombat}
                 waitframe
@@ -1121,7 +1122,7 @@ objectdef Object_Instance
             wait 100
         }
 
-		Obj_OgreIH:ChangeCampSpot["-34.124115,-16.858158,-312.102722"]
+		Obj_OgreIH:ChangeCampSpot["-37.278206,-16.844591,-307.949371"]
 		call Obj_OgreUtilities.HandleWaitForCampSpot 10
         call Obj_OgreUtilities.HandleWaitForCombat
 		wait 10
