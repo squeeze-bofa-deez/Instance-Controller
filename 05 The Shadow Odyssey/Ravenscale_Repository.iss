@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Ravenscale Repository | Author: The Marty Party | Date: 12 Feb 2024 | Version: 1.0
+; Title: Ravenscale Repository | Author: The Marty Party | Date: 12 Feb 2024 | Version: 1.1
 ;================================================================================
 
 variable string sZoneShortName="exp05_dun_mistmoore_repository"
@@ -20,6 +20,10 @@ atom Powermonger(string Text)
 	{
 		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Lifeburn" TRUE TRUE
 		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Undead Horde" TRUE TRUE
+		oc !c -CastAbility All Phase
+		wait 1
+		oc !c -CastAbility All Amnesia
+		wait 1
 		oc !c -CastAbility All Undead Horde
 		wait 20
 		oc !c -CastAbility All Lifeburn
@@ -49,7 +53,7 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.0
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.1
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
