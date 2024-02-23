@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Emperor's Athenaeum | Author: The Marty Party | Date: 17 Feb 2024 | Version: 1.0
+; Title: Emperor's Athenaeum | Author: The Marty Party | Date: 17 Feb 2024 | Version: 1.2
 ;================================================================================
 
 variable string sZoneShortName="exp04_dun_charasis_west"
@@ -11,7 +11,7 @@ variable(global) int iZoneResetTime=0
 
 function main(int _StartingPoint=0)
 {
-	call function_Handle_Startup_Process "-NoAutoLoadMapOnZone"
+	call function_Handle_Startup_Process ${_StartingPoint} "-NoAutoLoadMapOnZone" ${Args.Expand}
 }
 
 objectdef Object_Instance
@@ -33,7 +33,7 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.0
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.2
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -48,7 +48,7 @@ objectdef Object_Instance
 
 			Obj_OgreIH:Set_NoMove
 			_StartingPoint:Inc
-		    ;_StartingPoint:Set[4]
+		    ;_StartingPoint:Set[5]
 		}
         
         if ${_StartingPoint} == 1
@@ -116,17 +116,9 @@ objectdef Object_Instance
 		{
             Obj_OgreIH:LetsGo
         	eq2execute Target_None
-			
 			oc !c -cfw igw:${Me.Name} -Evac
-
-			wait 50
 			call Obj_OgreUtilities.HandleWaitForZoning
-			wait 50
-
-			Obj_OgreIH:SetCampSpot
-			Obj_OgreIH:ChangeCampSpot["-3.189948,-0.389323,0.195291"]
-			call Obj_OgreUtilities.HandleWaitForCampSpot 10
-			wait 50
+			call Movetoloc "-3.189948,-0.389323,0.195291"
 
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
@@ -160,7 +152,7 @@ objectdef Object_Instance
 		call Movetoloc "44.369457,1.110678,0.467280"
 		call Movetoloc "44.495506,1.110674,-15.428767"
 		call Movetoloc "44.230904,3.485679,-25.354059"
-		;Pulling first pack
+		;//Pulling first pack
         OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		oc !c -ChangeCampSpotWho ${Me.Name} 44.271294 3.985691 -37.323479
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
@@ -174,7 +166,7 @@ objectdef Object_Instance
         eq2execute Target_None
         call Obj_OgreUtilities.HandleWaitForCombat 40
 		wait 20
-		;Pulling second pack
+		;//Pulling second pack
         OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		oc !c -ChangeCampSpotWho ${Me.Name} 44.271294 3.985691 -37.323479
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
@@ -195,7 +187,7 @@ objectdef Object_Instance
 		call HandleNamed
         return TRUE
     }
-	
+
 ;================================================================================
 ; ˏˋ°•*⁀➷ˏˋ°•*⁀➷      NAMED 2 - Master of the Embalmers      ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
@@ -206,11 +198,9 @@ objectdef Object_Instance
 		call Movetoloc "44.312553,3.985691,-90.991234"
 		call OpenSesame
 		call Movetoloc "43.945488,3.985681,-105.467911"
-		;call Movetoloc "83.568192,3.985681,-105.535721"
 		call Movetoloc "108.798714,3.985681,-105.581825"
 		call Movetoloc "125.556229,4.937418,-71.319878"
 		call Movetoloc "135.317841,4.985681,-71.206177"
-		;call Movetoloc "140.556870,4.985681,-92.789284"
 		call Movetoloc "154.909729,5.985685,-104.822868"
 		call Movetoloc "169.821777,5.936140,-104.886528"
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -233,7 +223,6 @@ objectdef Object_Instance
 		call OpenSesame
 		call Movetoloc "116.157753,5.485677,-19.223646"
 		call Movetoloc "92.220085,5.485677,-3.521510"
-		;call Movetoloc "91.528961,5.485677,29.433231"
 		call Movetoloc "91.597816,5.485677,52.021896"
 		call Movetoloc "54.484291,4.485681,61.900471"
 		call Movetoloc "54.772545,4.485681,84.642212"
@@ -267,7 +256,7 @@ objectdef Object_Instance
         Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
 		wait 40
 		oc !c -ChangeCampSpotWho ${Me.Name} 125.452492 9.796870 32.160275
-		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		wait 40
 		call HandleNamed
         return TRUE
     }
@@ -282,25 +271,23 @@ objectdef Object_Instance
 		call Movetoloc "155.507568,9.735685,22.451809"
 		call HandlePuzzle
 		call Movetoloc "186.119217,7.985680,22.723824"
-		;call Movetoloc "244.854141,10.485685,22.879824"
 		call Movetoloc "273.389099,10.485684,22.716663"
 		call Obj_OgreUtilities.PreCombatBuff 5
-		;Below is stun
+		;//Below is stun
 		Ob_AutoTarget:AddActor["Sslortis",0,FALSE,FALSE]
-		;Below is disarm
+		;//Below is disarm
 		Ob_AutoTarget:AddActor["Octuss",0,FALSE,FALSE]
-		;Below is root
+		;//Below is root
 		Ob_AutoTarget:AddActor["Sunrise",0,FALSE,FALSE]
-		;Below is fear
+		;//Below is fear
 		Ob_AutoTarget:AddActor["Nightfall",0,FALSE,FALSE]
 		oc !c -ChangeCampSpotWho ${Me.Name} 297.897797 10.485686 22.430468
-        oc !c -ChangeCampSpotWho igwbn:${Me.Name} 281.657928 10.485685 22.499786
+        oc !c -ChangeCampSpotWho igwbn:${Me.Name} 277.574310 10.485685 22.675529
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
 		call HandleNamed
 		call Movetoloc "281.657928,10.485685,22.499786"
         return TRUE
     }
-
 
 ;================================================================================
 ; ˏˋ°•*⁀➷ˏˋ°•*⁀➷                  FUNCTIONS                 ˏˋ°•*⁀➷ˏˋ°•*⁀➷
