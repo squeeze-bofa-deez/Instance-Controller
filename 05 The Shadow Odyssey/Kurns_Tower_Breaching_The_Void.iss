@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Kurn's Tower: Breaching the Void | Author: The Marty Party | Date: 24 Feb 2024 | Version: 1.0
+; Title: Kurn's Tower: Breaching the Void | Author: The Marty Party | Date: 24 Feb 2024 | Version: 1.1
 ;================================================================================
 
 ;//Common variables
@@ -42,7 +42,7 @@ objectdef Object_Instance
                 return FALSE
             }
 
-            echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.0
+            echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.1
 
             Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
             Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -355,15 +355,18 @@ objectdef Object_Instance
         if ${Zone.ShortName.Equal["${sZoneShortName}"]} && ${Zone.Name.Equal["${sZoneName}"]}
         {
             echo ${Time}: I am still in ${sZoneName} and I can reset it. Zoning out to reset.
-            ;relay all face -4000 -2000
-            ;wait 50
-            ;relay all press -hold ${OgreForwardKey}
-            ;wait 50
-            ;relay all press -release ${OgreForwardKey}
             call Movetoloc "-80.650513,-54.623207,-129.097961"
-            call Obj_OgreUtilities.HandleWaitForZoning
+            wait 10
             oc !c -CS_ClearCampSpot igw:${Me.Name}
-
+            relay all press -hold ${OgreBackwardKey}
+            wait 10
+            relay all press -release ${OgreBackwardKey}
+            wait 10
+            relay all press -hold ${OgreForwardKey}
+            wait 10
+            relay all press -release ${OgreForwardKey}
+            call Obj_OgreUtilities.HandleWaitForZoning
+            
             if !${Return}
             {
                 Obj_OgreIH:Message_FailedZone
