@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Kurn's Tower: Breaching the Void | Author: The Marty Party | Date: 24 Feb 2024 | Version: 1.1
+; Title: Kurn's Tower: Breaching the Void | Author: The Marty Party | Date: 24 Feb 2024 | Version: 1.2
 ;================================================================================
 
 ;//Common variables
@@ -42,7 +42,7 @@ objectdef Object_Instance
                 return FALSE
             }
 
-            echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.1
+            echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.2
 
             Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
             Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -174,13 +174,25 @@ objectdef Object_Instance
         call Movetoloc "-56.841702,-49.852295,-95.141510"
         call Movetoloc "-57.615135,-4.749035,-75.093422"
         wait 50
+        eq2execute target a charbone destroyer
+        wait 50
+        call PostNamed
         call Movetoloc "-23.131332,-6.174342,-76.497589"
         call Movetoloc "43.411190,-6.174340,-59.008472"
+        eq2execute target a icebone destroyer
+        wait 50
+        call PostNamed
         call Movetoloc "63.795769,-1.505958,-28.273769"
         call Movetoloc "62.706581,-6.174342,44.038197"
         call Movetoloc "51.596912,-6.174342,72.745132"
+        eq2execute target a charbone destroyer
+        wait 50
+        call PostNamed
         call Movetoloc "-8.965021,-6.174342,49.027000"
         call Movetoloc "-52.447247,-4.871433,43.994820"
+        eq2execute target a icebone destroyer
+        wait 30
+        call PostNamed
         call Movetoloc "-52.592075,-4.458266,-0.275059"
         OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
         wait 20
@@ -223,25 +235,31 @@ objectdef Object_Instance
         oc !c -ApplyVerbForWho ${Me.Name} "disc_switch" "Raise Disc"
         wait 150
         call Movetoloc "-0.840866,288.437927,0.141982"
-        eq2execute target a remnant of theer
-        call PostNamed
-        wait 20
         eq2execute target a remnant of Theer
+        wait 50
         call PostNamed
-        wait 20
-        eq2execute target a remnant of theer
+        wait 10
+        eq2execute target a remnant of Theer
+        wait 50
         call PostNamed
-        wait 20
-        eq2execute target a remnant of theer
+        wait 10
+        eq2execute target a remnant of Theer
+        wait 50
+        call PostNamed
+        wait 10
+        eq2execute target a remnant of Theer
+        wait 50
         call PostNamed
         call Movetoloc "0.073239,288.964417,13.272736"
         call Movetoloc "0.247651,288.741852,69.428917"
         call Movetoloc "36.665356,289.171692,86.495232"
-        eq2execute target a remnant of theer
+        eq2execute target a remnant of Theer
+        wait 20
         call PostNamed
         call Movetoloc "0.247651,288.741852,69.428917"
         call Movetoloc "-36.791702,289.171692,87.237740"
-        eq2execute target a remnant of theer
+        eq2execute target a remnant of Theer
+        wait 20
         call PostNamed
         OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
         wait 30
@@ -262,11 +280,13 @@ objectdef Object_Instance
         call Movetoloc "-0.078320,288.964417,-13.631119"
         call Movetoloc "-0.511888,288.965118,-69.699593"
         call Movetoloc "-38.187572,289.395081,-88.620735"
-        eq2execute target a remnant of theer
+        eq2execute target a remnant of Theer
+        wait 20
         call PostNamed
         call Movetoloc "-0.511888,288.965118,-69.699593"
         call Movetoloc "37.295132,289.395081,-88.223724"
-        eq2execute target a remnant of theer
+        eq2execute target a remnant of Theer
+        wait 20
         call PostNamed
         OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
         wait 30
@@ -296,8 +316,9 @@ objectdef Object_Instance
         call Movetoloc "-51.955441,428.132141,-67.689964"
         call Movetoloc "-89.169769,428.332581,14.176392"
         OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
-        wait 30
+        wait 20
         Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        call Movetoloc "-66.699348,428.427704,10.735344"
         wait 50
         call HandleNamed
         return TRUE
