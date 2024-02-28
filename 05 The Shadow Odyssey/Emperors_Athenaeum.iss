@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Emperor's Athenaeum | Author: The Marty Party | Date: 17 Feb 2024 | Version: 1.2
+; Title: Emperor's Athenaeum | Author: The Marty Party | Date: 17 Feb 2024 | Version: 1.3
 ;================================================================================
 
 variable string sZoneShortName="exp04_dun_charasis_west"
@@ -33,8 +33,8 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.2
-					
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.3
+			
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
 			
@@ -43,7 +43,6 @@ objectdef Object_Instance
 			Obj_OgreUtilities.OgreNavLib:LoadMap
 			
 			call Obj_OgreIH.Set_VariousOptions
-			call Obj_OgreIH.Set_PriestAscension FALSE
 			OgreBotAPI:AutoTarget_SetScanRadius[igw:${Me.Name}, "40"]
 
 			Obj_OgreIH:Set_NoMove
@@ -111,7 +110,7 @@ objectdef Object_Instance
 			_StartingPoint:Inc
 		}
 
-		;// Finish zone (zone out)
+		;//Finish zone (zone out)
 		if ${_StartingPoint} == 6
 		{
             Obj_OgreIH:LetsGo
@@ -119,17 +118,18 @@ objectdef Object_Instance
 			oc !c -cfw igw:${Me.Name} -Evac
 			call Obj_OgreUtilities.HandleWaitForZoning
 			call Movetoloc "-3.189948,-0.389323,0.195291"
+			relay all end DragoGloves
 
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
 			
-			;Check if the zone can be reset.
+			;//Check if the zone can be reset.
 			call This.CheckZoneResetStatus
 			if !${Return}
             {             
                 return FALSE
             }
-			;Reset the zone
+			;//Reset the zone
 			call This.ResetZone
 			if !${Return}
             {                
@@ -243,6 +243,7 @@ objectdef Object_Instance
 		Event[EQ2_onIncomingText]:AttachAtom[Drago]
 		Event[EQ2_onIncomingText]:AttachAtom[Pet]
         echo ${Time}: Moving to ${_NamedNPC}
+		call DisableSwarmPets
 		call Movetoloc "58.149536,4.485681,99.393700"
 		call Movetoloc "58.025890,5.445258,68.272331"
 		call Movetoloc "92.213539,5.485677,46.617970"
@@ -251,6 +252,7 @@ objectdef Object_Instance
 		call OpenSesame
 		call Movetoloc "129.739380,8.073309,22.628820"
 		call Movetoloc "125.452492,9.796870,32.160275"
+		relay all run DragoGloves
 		oc !c -ChangeCampSpotWho ${Me.Name} 135.037674 7.985678 22.338934
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
         Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
@@ -267,12 +269,15 @@ objectdef Object_Instance
 	function:bool Named5(string _NamedNPC="Doesnotexist")
 	{
         echo ${Time}: Moving to ${_NamedNPC}
+		call EnableSwarmPets
 		call Movetoloc "130.668213,8.073309,22.404922"
 		call Movetoloc "155.507568,9.735685,22.451809"
 		call HandlePuzzle
 		call Movetoloc "186.119217,7.985680,22.723824"
 		call Movetoloc "273.389099,10.485684,22.716663"
 		call Obj_OgreUtilities.PreCombatBuff 5
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 20
 		;//Below is stun
 		Ob_AutoTarget:AddActor["Sslortis",0,FALSE,FALSE]
 		;//Below is disarm
@@ -391,7 +396,8 @@ objectdef Object_Instance
 		call Obj_OgreIH.KillActorType 10
 		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
         eq2execute summon
-		wait 40
+		call Obj_OgreUtilities.WaitForLootWindow
+		wait 10
 	}
 
 	function OpenSesame()
@@ -430,8 +436,8 @@ objectdef Object_Instance
 		oc Setting OuterRing
 		while ${Actor[Query,ID=${OuterRing} && Heading != 180](exists)}
 		{
-		OgreBotAPI:ApplyVerb["${OuterRing}","Rotate Letters Clockwise"]
-		wait 20
+			OgreBotAPI:ApplyVerb["${OuterRing}","Rotate Letters Clockwise"]
+			wait 20
 		}
 
 		oc OuterRing Set!
@@ -440,8 +446,8 @@ objectdef Object_Instance
 		oc Setting MiddleRing
 		while ${Actor[Query,ID=${MiddleRing} && Heading != 216](exists)}
 		{
-		OgreBotAPI:ApplyVerb["${MiddleRing}","Rotate Crystals Clockwise"]
-		wait 20
+			OgreBotAPI:ApplyVerb["${MiddleRing}","Rotate Crystals Clockwise"]
+			wait 20
 		}
 
 		oc MiddleRing Set!
@@ -450,8 +456,8 @@ objectdef Object_Instance
 		oc Setting InnerRing
 		while ${Actor[Query,ID=${InnerRing} && Heading != 180](exists)}
 		{
-		OgreBotAPI:ApplyVerb["${InnerRing}","Rotate Star Clockwise"]
-		wait 20
+			OgreBotAPI:ApplyVerb["${InnerRing}","Rotate Star Clockwise"]
+			wait 20
 		}
 		oc InnerRing Set!
 
@@ -460,6 +466,44 @@ objectdef Object_Instance
 		wait 5
 		OgreBotAPI:ApplyVerb["${GreenSwitch}","Unlock Vault Door"]
 		wait 20
+	}
+
+	function DisableSwarmPets()
+	{
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Band of Thugs" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Blighted Horde" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Awaken Grave" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Ball Lightning" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Ring of Fire" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Undead Horde" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Puppetmaster" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Dark Infestation" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Vampirism" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Unswerving Hammer" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Spiritual Shrine" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Lunar Attendant" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:Clockwork Cow Catapult" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:Tinkered Turkey Launcher" FALSE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:an oddly shaped whistle" FALSE TRUE
+	}
+
+	function EnableSwarmPets()
+	{
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Band of Thugs" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Blighted Horde" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Awaken Grave" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Ball Lightning" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Ring of Fire" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Undead Horde" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Puppetmaster" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Dark Infestation" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Vampirism" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Unswerving Hammer" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Spiritual Shrine" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Lunar Attendant" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:Clockwork Cow Catapult" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:Tinkered Turkey Launcher" TRUE TRUE
+		relay all OgreBotAtom aExecuteAtom all a_QueueCommand ChangeCastStackListBoxItem "Item:an oddly shaped whistle" TRUE TRUE
 	}
 }
 
