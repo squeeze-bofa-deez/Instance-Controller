@@ -1,46 +1,71 @@
-variable string sZoneNameStart="The Shard of Fear"
-variable string sZoneNameEnd="The Shard of Fear"
-variable string sZoneShortName="The Shard_of_Fear"
+;================================================================================
+; Title: The Shard of Fear | Author: The Marty Party | Date: 07 Mar 2024 | Version: 2.0
+;================================================================================
+
+variable string sZoneName="Shard of Fear"
+variable string sZoneShortName="shard_of_fear"
+variable(global) collection:string gcsRetValue
+variable(global) int iZoneResetTime=0
 
 #include "${LavishScript.HomeDirectory}/Scripts/EQ2OgreBot/InstanceController/Ogre_Instance_Include.iss"
 
 function main(int _StartingPoint=0)
 {
-	call function_Handle_Startup_Process "-NoAutoLoadMapOnZone"
+	call function_Handle_Startup_Process ${_StartingPoint} "-NoAutoLoadMapOnZone" ${Args.Expand}
 }
 
 objectdef Object_Instance
 {
 	function:bool RunInstance(int _StartingPoint=0)
 	{
-        
         if ${_StartingPoint} == 0
 		{
-			call This.Named0 "The Skeletal Destructor"
+            ogre ica
+            wait 2
+            
+			call Obj_OgreIH.CD.GetIntoZone
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#0: The Skeletal Destructor"]
+				eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name="The Shard of Fear"].ID} Enter the Shard of Fear
+				call Obj_OgreUtilities.HandleWaitForZoning
+				Obj_OgreIH:Message_FailedZone
 				return FALSE
 			}
+
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 2.0
+					
+        	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
+			
+			Ogre_Instance_Controller:ZoneSet
+			;Obj_OgreUtilities.OgreNavLib:ChangeLoadingPath["InstanceController"]
+			Obj_OgreUtilities.OgreNavLib:LoadMap
+			
+			call Obj_OgreIH.Set_VariousOptions
+			OgreBotAPI:AutoTarget_SetScanRadius[igw:${Me.Name}, "40"]
+
+			Obj_OgreIH:Set_NoMove
 			_StartingPoint:Inc
+			;_StartingPoint:Set[2]
 		}
 
         if ${_StartingPoint} == 1
 		{
-			call This.Named1 "Spinechill Venomfang"
+			call This.Named1 "The Skeletal Destructor"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#1: Spinechill Venomfang"]
+				Obj_OgreIH:Message_FailedZone["#1: The Skeletal Destructor"]
 				return FALSE
 			}
 			_StartingPoint:Inc
-		}        
+		}   
+     
 		if ${_StartingPoint} == 2
 		{
-			call This.Named2 "Dracoliche"
+			call This.Named2 "Spinechill Venomfang"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#2: Dracoliche"]
+				Obj_OgreIH:Message_FailedZone["#2: Spinechill Venomfang"]
 				return FALSE
 			}
 			_StartingPoint:Inc
@@ -48,10 +73,10 @@ objectdef Object_Instance
 
 		if ${_StartingPoint} == 3
 		{
-			call This.Named3 "The Caretaker"
+			call This.Named3 "Dracoliche"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#3: The Caretaker"]
+				Obj_OgreIH:Message_FailedZone["#3: Dracoliche"]
 				return FALSE
 			}
 			_StartingPoint:Inc
@@ -59,20 +84,20 @@ objectdef Object_Instance
 
 		if ${_StartingPoint} == 4
 		{
-			call This.Named4 "Terrock"
+			call This.Named4 "Kyr'Tok"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#4: The Skeletal Lord"]
+				Obj_OgreIH:Message_FailedZone["#4: Kyr'Tok"]
 				return FALSE
 			}
 			_StartingPoint:Inc
 		}
 		 if ${_StartingPoint} == 5
 		{
-			call This.Named5 "The Skeletal Destructor"
+			call This.Named5 "Fearmonger"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#5: The Skeletal Destructor"]
+				Obj_OgreIH:Message_FailedZone["#5: Fearmonger"]
 				return FALSE
 			}
 			_StartingPoint:Inc
@@ -80,2537 +105,671 @@ objectdef Object_Instance
 		
         if ${_StartingPoint} == 6
 		{
-			call This.Named6 "ZoneOut"
+			call This.Named6 "Kza'Bok"
 			if !${Return}
 			{
-				Obj_OgreIH:Message_FailedZone["#6: ZoneOut"]
+				Obj_OgreIH:Message_FailedZone["#6: The Skeletal Destructor"]
 				return FALSE
 			}
 			_StartingPoint:Inc
-		}        
-		Obj_OgreIH:LetsGo
-        return TRUE
-    }
-    function:bool Named0(string _NamedNPC="Doesnotexist")
-	{
-        ;//Named The Skeletal Destructor
-		variable point3f TrashSpot1="-5.024852,6.219964,356.708252"
-		variable point3f TrashSpot2="-70.693512,9.537185,310.189819"
-		variable point3f TrashSpot3="-188.824142,25.081112,405.006866"
-        variable point3f TrashSpot4="-211.153290,27.916977,442.870026"
-		variable point3f TrashSpot5="-235.189957,27.529818,437.244385"
-        variable point3f TrashSpot6="-246.837204,28.702820,413.732025"
-        variable point3f TrashSpot7="-230.304260,27.453718,390.890350"
-        variable point3f TrashSpot8="-201.630402,23.046049,386.812866"
-        variable point3f TrashSpot9="-218.078308,31.715210,417.64409"
-		variable point3f NamedMob="-218.078308,31.715210,417.64409"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 15
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 2
-		echo Trashpack 2  ${TrashSpot2}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		}
 
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+        if ${_StartingPoint} == 7
+		{
+			call This.Named7 "Dracoliche"
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone["#7: Dracoliche"]
+				return FALSE
+			}
+			_StartingPoint:Inc
+		}
 
-        ;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+        if ${_StartingPoint} == 8
+		{
+			call This.Named8 "The Caretaker"
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone["#8: The Caretaker"]
+				return FALSE
+			}
+			_StartingPoint:Inc
+		}
 
-        ;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+        if ${_StartingPoint} == 9
+		{
+			call This.Named9 "The Skeletal Lord"
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone["#9: The Skeletal Lord"]
+				return FALSE
+			}
+			_StartingPoint:Inc
+		}
 
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+        if ${_StartingPoint} == 10
+		{
+			call This.Named10 "Terror"
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone["#10: Terror"]
+				return FALSE
+			}
+			_StartingPoint:Inc
+		}
 
-        ;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		;//Finish zone (zone out)
+		if ${_StartingPoint} == 11
+		{
+            Obj_OgreIH:LetsGo
+        	eq2execute Target_None
 
-		;// Trashpack 9
-		echo Trashpack 9  ${TrashSpot9}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+			call Movetoloc "1.840139,36.152531,-435.727234"
+			call Movetoloc "2.004151,12.817632,-412.322296"
+			call Movetoloc "3.301099,-1.879076,-367.074951"
+			Obj_OgreIH:ChangeCampSpot["2.982432,-6.302072,-359.419220"]
+			wait 20
+			oc !c -CS_ClearCampSpot igw:${Me.Name}
+			oc !c -FlyDown
+			wait 10
+			oc !c -FlyStop
+			wait 20
+			call Movetoloc "147.392532,1.037414,-309.584900"
+			call Movetoloc "5.337682,-1.492811,-257.190765"
+			call Movetoloc "4.647557,12.996907,-104.511894"
+			call Movetoloc "12.155289,49.279579,0.984652"
+			call Movetoloc "72.327759,52.785973,1.871266"
+			call Movetoloc "128.247406,57.307831,-15.356686"
+			call Movetoloc "229.339294,58.020168,21.881876"
+			call Movetoloc "189.696381,7.249128,320.725952"
+			call Movetoloc "112.176216,4.374789,381.246216"
+			call Movetoloc "-2.380213,11.564971,479.742889"
 
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${NamedMob}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 50
-		OgreBotAPI:Actor_ClickQueued[string _ForWho="all", Skeletal Destructor's skull, bool _ExactName=FALSE]
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
 			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}			
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
-        return TRUE
+			;//Check if the zone can be reset.
+			call This.CheckZoneResetStatus
+			if !${Return}
+            {             
+                return FALSE
+            }
+			;//Reset the zone
+			call This.ResetZone
+			if !${Return}
+            {                
+                return FALSE
+            }		
+			_StartingPoint:Inc
+		}
+		return TRUE
     }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 1 - The Skeletal Destructor          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
     function:bool Named1(string _NamedNPC="Doesnotexist")
 	{
-		;//Named Spinechill Venomfang
-		variable point3f TrashSpot1="-171.604431,8.871163,330.795074"
-		variable point3f TrashSpot2="-201.437042,9.330025,264.439545"
-        variable point3f TrashSpot3="-255.211472,17.165457,191.191055"
-        variable point3f TrashSpot4="-296.386627,21.131783,189.710983"
-        variable point3f TrashSpot5="-303.635925,20.457323,165.800797"
-        variable point3f TrashSpot6="-296.386627,21.131783,189.710983"
-        variable point3f TrashSpot7="-312.866699,20.248741,211.168869"
-        variable point3f TrashSpot8="-296.386627,21.131783,189.710983"
-        variable point3f TrashSpot9="-243.250000,16.208952,191.448334"
-        variable point3f TrashSpot10="-165.798294,7.717987,345.437714"
-        variable point3f TrashSpot11="-72.179520,12.302525,322.312012"
-        variable point3f TrashSpot12="20.522562,9.237407,334.276276 "
-        variable point3f TrashSpot13="97.852150,3.487653,391.932098"
-        variable point3f TrashSpot14="151.530060,2.470136,382.655182"
-        variable point3f TrashSpot15="188.011459,-0.384898,377.018890"
-        variable point3f TrashSpot16="221.034134,3.997314,366.993439"
-        variable point3f TrashSpot17="257.191010,12.056410,380.562225"
-        variable point3f TrashSpot18="269.522003,14.441968,338.489868"
-        variable point3f TrashSpot19="266.454865,15.025488,309.704865"
-        variable point3f TrashSpot20="304.203339,13.630470,299.438690"
-        variable point3f TrashSpot21="317.209229,14.206821,342.527496"
-		variable point3f TrashSpot22="342.908813,15.191376,373.069489"
-        variable point3f TrashSpot23="293.709137,13.554070,354.941986"
-        variable point3f TrashSpot24="291.771912,17.034819,322.349060"
-        variable point3f TrashSpot25="293.709137,13.554070,354.941986"
-        variable point3f TrashSpot26="319.096130,13.018787,430.710907"
-        variable point3f TrashSpot27="383.663269,32.188766,456.378693"
-		variable point3f NamedMob="391.060974,28.879581,409.690002"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 2
-		echo Trashpack 2 ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 9
-		echo Trashpack 9 ${TrashSpot9}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 10
-		echo Trashpack 10 ${TrashSpot10}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot10}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 11
-		echo Trashpack 11 ${TrashSpot11}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot11}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 12
-		echo Trashpack 12 ${TrashSpot12}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot12}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 13
-		echo Trashpack 13 ${TrashSpot13}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot13}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 14
-		echo Trashpack 14 ${TrashSpot14}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot14}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 15
-		echo Trashpack 15 ${TrashSpot15}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot15}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 16
-		echo Trashpack 16 ${TrashSpot16}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot16}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 17
-		echo Trashpack 17 ${TrashSpot17}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot17}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 18
-		echo Trashpack 18 ${TrashSpot18}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot18}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 19
-		echo Trashpack 19 ${TrashSpot19}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot19}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 20
-		echo Trashpack 20 ${TrashSpot20}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot20}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 21
-		echo Trashpack 21 ${TrashSpot21}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot21}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 22
-		echo Trashpack 22 ${TrashSpot22}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot22}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 23
-		echo Trashpack 23 ${TrashSpot23}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot23}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-        wait 5
-
-        ;// Trashpack 24
-		echo Trashpack 24 ${TrashSpot24}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot24}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 25
-		echo Trashpack 25 ${TrashSpot25}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot25}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 26
-		echo Trashpack 26 ${TrashSpot26}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot26}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		 ;// Trashpack 27
-		echo Trashpack 27 ${TrashSpot27}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot27}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${NamedMob}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}	
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-3.846791,11.564966,478.116150"
+		call Movetoloc "21.848713,5.817113,416.217407"
+		call Movetoloc "-11.538804,10.388317,313.048157"
+		call Movetoloc "-59.851204,9.041076,294.271729"
+		call Movetoloc "-178.030334,8.189329,342.580597"
+		call Movetoloc "-190.775482,24.792496,401.296722"
+		call Movetoloc "-203.262787,28.187679,439.705566"
+		call Movetoloc "-229.297363,27.281084,441.605011"
+		call Movetoloc "-245.712616,28.574440,416.619324"
+		call Movetoloc "-231.894211,28.150501,393.378693"
+		call Movetoloc "-202.851746,24.529360,390.566956"
+		call Movetoloc "-216.609238,31.715210,416.340363"
+        Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
         return TRUE
     }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 2 - Spinechill Venomfang          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
     function:bool Named2(string _NamedNPC="Doesnotexist")
 	{
-		;//Named Dracoliche 
-		variable point3f TrashSpot1="267.770813,13.040726,397.643280"
-        variable point3f TrashSpot2="214.932678,13.590875,303.470459"
-        variable point3f TrashSpot3="251.931396,30.791435,276.315582"
-        variable point3f TrashSpot4="305.044586,50.848503,241.424652"
-        variable point3f TrashSpot5="314.772430,61.765057,181.859665"
-        variable point3f TrashSpot6="307.563751,61.687275,135.783035"
-        variable point3f TrashSpot7="309.562622,78.098267,104.470734"
-        variable point3f TrashSpot8="307.563751,61.687275,135.783035"
-        variable point3f TrashSpot9="298.030548,61.266651,125.636093"
-        variable point3f TrashSpot10="252.955185,56.863083,79.557938"
-        variable point3f TrashSpot11="247.080353,56.136360,40.220726"
-        variable point3f TrashSpot12="262.476654,56.742920,24.504221"
-        variable point3f TrashSpot13="241.338821,57.821480,-7.230289"
-        variable point3f TrashSpot14="257.513153,58.575478,-24.496578"
-        variable point3f TrashSpot15="276.093597,58.651165,-28.029697"
-        variable point3f TrashSpot16="257.513153,58.575478,-24.496578"
-        variable point3f TrashSpot17="248.914703,57.857101,-50.083942"
-        variable point3f TrashSpot18="257.513153,58.575478,-24.496578"
-        variable point3f TrashSpot19="234.111450,57.079163,10.147430"
-        variable point3f TrashSpot20="119.178436,56.851025,-2.938836"
-        variable point3f TrashSpot21="38.602581,49.833183,8.922604"
-        variable point3f TrashSpot22="10.124080,48.947388,26.444407"
-		variable point3f NamedMob="-84.336769,46.250412,-1.203608"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 2
-		echo Trashpack 2 ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-
-        ;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 9
-		echo Trashpack 9 ${TrashSpot9}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 10
-		echo Trashpack 10 ${TrashSpot10}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot10}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 11
-		echo Trashpack 11 ${TrashSpot11}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot11}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 12
-		echo Trashpack 12 ${TrashSpot12}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot12}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 13
-		echo Trashpack 13 ${TrashSpot13}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot13}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 14
-		echo Trashpack 14 ${TrashSpot14}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot14}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 15
-		echo Trashpack 15 ${TrashSpot15}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot15}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 16
-		echo Trashpack 16 ${TrashSpot16}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot16}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 17
-		echo Trashpack 17 ${TrashSpot17}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot17}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 18
-		echo Trashpack 18 ${TrashSpot18}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot18}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 19
-		echo Trashpack 19 ${TrashSpot19}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot19}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 20
-		echo Trashpack 20 ${TrashSpot20}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot20}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 21
-		echo Trashpack 21 ${TrashSpot21}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot21}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 22
-		echo Trashpack 22 ${TrashSpot22}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot22}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${NamedMob}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}	
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
+		echo ${Time}: Moving to ${_NamedNPC}
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		oc !c -ApplyVerbForWho igw:${Me.Name} "Skeletal Destructor's skull" "investigate the skull"
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "-180.185806,7.933929,344.447906"
+		call Movetoloc "-118.548592,9.263172,313.566467"
+		call Movetoloc "-3.530727,10.980764,313.044495 "
+		call Movetoloc "29.119467,5.916119,436.631592"
+		call Movetoloc "118.227684,4.084022,381.959076"
+		call Movetoloc "198.509232,11.179199,305.259125"
+		call Movetoloc "247.865219,28.513428,283.460449"
+		call Movetoloc "257.520233,34.354553,298.705261"
+		call Movetoloc "267.656281,14.006891,320.519531"
+		call Movetoloc "277.773041,18.928249,301.782410"
+		call Movetoloc "300.235199,13.858466,298.970612"
+		call Movetoloc "315.139923,13.814945,324.065033"
+		call Movetoloc "307.167358,13.556152,351.091797"
+		call Movetoloc "275.593597,13.505184,354.919098"
+		call Movetoloc "254.179337,11.649733,373.063965"
+		call Movetoloc "324.101166,13.397428,354.147644"
+		call Movetoloc "362.963867,15.043817,399.979187"
+		call Movetoloc "390.271545,28.509695,398.457703"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call WaitForNamed
+		call HandleNamed
         return TRUE
     }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 3 - The Skeletal Master          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
     function:bool Named3(string _NamedNPC="Doesnotexist")
 	{
-		;// The Caretaker
-		variable point3f TrashSpot1="2.654885,49.489014,2.613653"
-        variable point3f TrashSpot2="-21.499674,0.729217,-167.267380"
-        variable point3f TrashSpot3="-82.662140,-0.186862,-190.416885"
-        variable point3f TrashSpot4="-196.428543,5.721048,-221.264221"
-		variable point3f NamedMob="-245.871918,17.770281,-208.605804"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 2
-		echo Trashpack 2 ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${NamedMob}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}	
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "364.451477,16.056309,399.246185"
+		call Movetoloc "328.534912,13.947462,366.697571"
+		call Movetoloc "292.670227,13.558512,352.750427"
+		call Movetoloc "290.861542,17.034819,326.140747"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
         return TRUE
     }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 4 - Kyr'Tok          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
     function:bool Named4(string _NamedNPC="Doesnotexist")
 	{
-		;// Terrock
-		variable point3f TrashSpot1="-177.770676,0.629568,-239.101746"
-		variable point3f TrashSpot2="-176.194931,0.212776,-272.681671"
-		variable point3f TrashSpot3="-237.137634,1.656896,-273.128784"
-		variable point3f TrashSpot4="-225.940430,1.520028,-265.315521"
-        variable point3f TrashSpot5="-211.037170,0.923942,-262.938293"
-        variable point3f TrashSpot6="-205.009689,1.010426,-263.729767"
-        variable point3f TrashSpot7="-198.868362,1.174347,-263.797058"
-        variable point3f TrashSpot8="-192.762924,1.254024,-263.864075"
-        variable point3f TrashSpot9="-185.820313,1.267017,-263.940277"
-        variable point3f TrashSpot10="-173.420029,-0.006670,-264.076263"
-        variable point3f TrashSpot11="-168.012253,-0.242174,-264.275024"
-        variable point3f TrashSpot12="-154.334610,-0.964165,-264.777618"
-        variable point3f TrashSpot13="-145.100601,-0.866034,-265.117004"
-        variable point3f TrashSpot14="-130.673645,0.434032,-265.600006"
-        variable point3f TrashSpot15="-123.086304,0.377478,-265.577576"
-        variable point3f TrashSpot16="-108.399582,0.227739,-265.512054"
-        variable point3f TrashSpot17="-104.108772,0.243124,-265.622040"
-        variable point3f TrashSpot18="-96.040833,0.215841,-265.823425"
-        variable point3f TrashSpot19="-83.499092,0.242648,-266.136230"
-        variable point3f TrashSpot20="-77.896286,0.314271,-266.275970"
-        variable point3f TrashSpot21="-66.265076,0.196338,-266.566040"
-        variable point3f TrashSpot22="-59.894329,0.076296,-266.398865"
-        variable point3f TrashSpot23="-44.536682,0.528672,-268.311462"
-        variable point3f TrashSpot24="-39.032452,0.229622,-269.734283"
-        variable point3f TrashSpot25="-33.908424,-0.784662,-271.635681"
-        variable point3f TrashSpot26="-24.632738,-1.837623,-276.389404"
-        variable point3f TrashSpot27="-16.036627,-2.234334,-276.473724"
-        variable point3f TrashSpot28="-10.771539,-2.383848,-276.977753"
-        variable point3f TrashSpot29="-4.812752,-2.311025,-277.548065"
-        variable point3f TrashSpot30="6.020194,-2.335560,-277.217987"
-        variable point3f TrashSpot31="10.856768,-2.369972,-275.194244"
-        variable point3f TrashSpot32="21.117777,-1.778850,-270.005585"
-        variable point3f TrashSpot33="30.687611,-0.750703,-265.102631"
-        variable point3f TrashSpot34="34.102409,-0.402229,-263.619751"
-        variable point3f TrashSpot35="37.651821,-0.393510,-263.947815"
-        variable point3f TrashSpot36="52.312592,-0.334674,-267.933289"
-        variable point3f TrashSpot37="57.399906,-0.085349,-270.042084"
-        variable point3f TrashSpot38="70.427246,0.297161,-274.590973"
-        variable point3f TrashSpot39="77.452797,0.253474,-285.359650"
-        variable point3f TrashSpot40="78.159683,0.374943,-290.691833"
-        variable point3f TrashSpot41="79.073921,0.599517,-297.012146"
-        variable point3f TrashSpot42="88.226753,0.402296,-300.676361"
-        variable point3f TrashSpot43="93.080841,0.234987,-303.149017"
-        variable point3f TrashSpot44="100.940964,0.105742,-305.935944"
-        variable point3f TrashSpot45="111.968948,0.196324,-310.129974"
-        variable point3f TrashSpot46="122.284462,0.206391,-315.057220"
-        variable point3f TrashSpot47="129.523300,0.153429,-318.001892"
-        variable point3f TrashSpot48="139.093506,0.274762,-321.567566"
-        variable point3f TrashSpot49="146.404114,0.007504,-329.668854"
-        variable point3f TrashSpot50="149.345474,-0.311674,-334.541321"
-        variable point3f TrashSpot51="155.202927,-0.823128,-339.714783"
-        variable point3f TrashSpot52="161.140015,-1.026394,-342.440094"
-        variable point3f TrashSpot53="170.638153,-1.143116,-341.859009"
-        variable point3f TrashSpot54="181.346191,-1.212950,-341.989594"
-        variable point3f TrashSpot55="208.593231,-8.147215,-354.264954"
-        variable point3f NamedMob="211.044525,-8.640788,-364.134613"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
+		echo ${Time}: Moving to ${_NamedNPC}
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		oc !c -ApplyVerbForWho igw:${Me.Name} "Skeletal Master's skull" "investigate the skull"
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "293.953003,12.777811,359.259918"
+		call Movetoloc "256.275055,12.562155,360.178680"
+		call Movetoloc "247.357086,28.303900,283.719452"
+		call Movetoloc "299.927277,50.497459,240.591873"
+		call Movetoloc "314.157135,61.573761,205.509018"
+		call Movetoloc "308.930817,61.814728,141.843216"
+		call Movetoloc "307.875122,73.190506,114.612022"
 		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 2
-		echo Trashpack 2 ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 9
-		echo Trashpack 9 ${TrashSpot9}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 10
-		echo Trashpack 10 ${TrashSpot10}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot10}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 11
-		echo Trashpack 11 ${TrashSpot11}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot11}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 12
-		echo Trashpack 12 ${TrashSpot12}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot12}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 13
-		echo Trashpack 13 ${TrashSpot13}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot13}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 14
-		echo Trashpack 14 ${TrashSpot14}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot14}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 15
-		echo Trashpack 15 ${TrashSpot15}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot15}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 16
-		echo Trashpack 16 ${TrashSpot16}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot16}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 17
-		echo Trashpack 17 ${TrashSpot17}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot17}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 18
-		echo Trashpack 18 ${TrashSpot18}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot18}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 19
-		echo Trashpack 19 ${TrashSpot19}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot19}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 20
-		echo Trashpack 20 ${TrashSpot20}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot20}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 21
-		echo Trashpack 21 ${TrashSpot21}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot21}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 22
-		echo Trashpack 22 ${TrashSpot22}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot22}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 23
-		echo Trashpack 23 ${TrashSpot23}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot23}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 24
-		echo Trashpack 24 ${TrashSpot24}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot24}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 25
-		echo Trashpack 25 ${TrashSpot25}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot25}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 26
-		echo Trashpack 26 ${TrashSpot26}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot26}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 27
-		echo Trashpack 27 ${TrashSpot27}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot27}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 28
-		echo Trashpack 28 ${TrashSpot28}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot28}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 29
-		echo Trashpack 29 ${TrashSpot29}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot29}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 30
-		echo Trashpack 30 ${TrashSpot30}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot30}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 31
-		echo Trashpack 31 ${TrashSpot31}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot31}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 32
-		echo Trashpack 32 ${TrashSpot32}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot32}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 33
-		echo Trashpack 33 ${TrashSpot33}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot33}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 34
-		echo Trashpack 34 ${TrashSpot34}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot34}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 35
-		echo Trashpack 35 ${TrashSpot35}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot35}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 36
-		echo Trashpack 36 ${TrashSpot36}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot36}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 37
-		echo Trashpack 37 ${TrashSpot37}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot37}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 38
-		echo Trashpack 38 ${TrashSpot38}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot38}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 39
-		echo Trashpack 39 ${TrashSpot39}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot39}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 40
-		echo Trashpack 40 ${TrashSpot40}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot40}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 41
-		echo Trashpack 41 ${TrashSpot41}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot41}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 42
-		echo Trashpack 42 ${TrashSpot42}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot42}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 43
-		echo Trashpack 43 ${TrashSpot43}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot43}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 44
-		echo Trashpack 44 ${TrashSpot44}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot44}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 45
-		echo Trashpack 45 ${TrashSpot45}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot45}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 46
-		echo Trashpack 46 ${TrashSpot46}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot46}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 47
-		echo Trashpack 47 ${TrashSpot47}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot47}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 48
-		echo Trashpack 48 ${TrashSpot48}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot48}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 49
-		echo Trashpack 49 ${TrashSpot49}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot49}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 50
-		echo Trashpack 50 ${TrashSpot50}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot50}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 51
-		echo Trashpack 51 ${TrashSpot51}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot51}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 52
-		echo Trashpack 52 ${TrashSpot52}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot52}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 53
-		echo Trashpack 53 ${TrashSpot53}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot53}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 54
-		echo Trashpack 54 ${TrashSpot54}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot54}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 55
-		echo Trashpack 55 ${TrashSpot55}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot55}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${NamedMob}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}	
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 30
+		call Movetoloc "310.203857,78.097847,107.840858"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
         return TRUE
-	}	   
-	 function:bool Named5(string _NamedNPC="Doesnotexist")
+    }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 5 - Fearmonger          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+    function:bool Named5(string _NamedNPC="Doesnotexist")
 	{
-        ;//Named The Skeletal Destructor
-		variable point3f TrashSpot1="227.872284,-0.885398,-326.933624"
-		variable point3f TrashSpot2="227.910416,7.190886,-297.363708"
-		variable point3f TrashSpot3="231.455963,7.423794,-253.619186"
-        variable point3f TrashSpot4="207.944107,7.897302,-238.674149"
-		variable point3f TrashSpot5="189.078964,6.604390,-263.651184"
-        variable point3f TrashSpot6="188.165176,6.496874,-263.941711"
-        variable point3f TrashSpot7="187.950836,5.895335,-311.326263"
-        variable point3f TrashSpot8="213.214310,10.922078,-271.189545"
-        variable point3f TrashSpot9="212.143265,10.922079,-272.268005"
-		variable point3f NamedMob="-212.143265,10.922079,-272.268005"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "308.958649,61.737061,136.758972"
+		call Movetoloc "287.981262,61.307735,119.868027"
+		call Movetoloc "308.674194,61.196522,119.900330"
 		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 15
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 2
-		echo Trashpack 2  ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 9
-		echo Trashpack 9  ${TrashSpot9}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		OgreBotAPI:Actor_ClickQueued[string _ForWho="all", Skeletal Destructor's skull, bool _ExactName=FALSE]
-		wait 50
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-			
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}			
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			oc ${Time}: ${_NamedNPC} Deaded 
-		}	
-		call Obj_OgreIH.Get_Chest
+		OgreBotAPI:CastAbility_Relay["all","Bladedance"]
+		wait 30
+		call Movetoloc "308.617859,61.930336,107.998528"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
         return TRUE
 	}
-		function:bool Named6(string _NamedNPC="Doesnotexist")
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 6 - Kza'Bok          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named6(string _NamedNPC="Doesnotexist")
 	{
-        ;//Zoneout
-		variable point3f TrashSpot1="181.163742,5.098829,-314.282166"
-		variable point3f TrashSpot2="97.987381,-0.941786,-268.862701"
-		variable point3f TrashSpot3="55.762970,-0.927785,-224.091660"
-        variable point3f TrashSpot4="2.107159,0.941754,-189.766479"
-		variable point3f TrashSpot5="2.452629,7.332544,-118.365227"
-        variable point3f TrashSpot6="2.723729,43.329956,-47.751717"
-        variable point3f TrashSpot7="2.945197,49.571888,9.933652"
-        variable point3f TrashSpot8="76.101952,52.153297,5.040038"
-        variable point3f TrashSpot9="98.627357,56.631084,-11.476594"
-		variable point3f TrashSpot10="181.652054,61.499977,2.212728"
-		variable point3f TrashSpot11="206.697266,60.310394,10.640372"
-		variable point3f TrashSpot12="218.702866,57.875477,29.630522"
-		variable point3f TrashSpot13="207.998108,42.356979,143.000870"
-		variable point3f TrashSpot14="198.658493,33.624001,201.438324"
-		variable point3f TrashSpot15="189.517059,20.146919,258.635559"
-		variable point3f TrashSpot16="181.338852,8.731186,309.806427"
-		variable point3f TrashSpot17="152.391769,5.119856,352.453033"
-		variable point3f TrashSpot18="106.688690,4.260110,382.998352"
-		variable point3f TrashSpot19="61.152050,4.464605,415.126648"
-		variable point3f TrashSpot20="25.864735,7.293505,449.050415"
-		variable point3f TrashSpot21="-2.980228,11.564966,478.272369"
-		variable point3f NamedMob="-9.906334,7.905126,485.225342"
-		
-		Obj_OgreIH:LetsGo
-		;// Trashpack 1
-		echo Trashpack 1 ${TrashSpot1}
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "308.916565,61.190605,119.234840"
+		call Movetoloc "287.202362,61.308365,119.467896"
+		call Movetoloc "241.231522,57.039570,55.634327"
 		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:SetCampSpot
-		wait 15
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot1}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 2
-		echo Trashpack 2  ${TrashSpot2}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot2}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		
-		;// Trashpack 3
-		echo Trashpack 3 ${TrashSpot3}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot3}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		call Movetoloc "257.539490,56.066673,41.866760"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
+        return TRUE
+	}
 
-        ;// Trashpack 4
-		echo Trashpack 4 ${TrashSpot4}
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 7 - Dracoliche          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named7(string _NamedNPC="Doesnotexist")
+	{
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "249.354218,56.601452,12.251396"
+		call Movetoloc "238.394684,56.452919,3.351530"
+		;//First Caller
+		oc !c -ChangeCampSpotWho ${Me.Name} 242.987289 57.702778 -4.296951
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 235.800369 56.918808 8.743260
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		;//Second Caller
+        OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 271.648193 57.726837 -27.239639
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		;//Third Caller
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 254.142532 57.726837 -38.468189
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		call Movetoloc "246.202927,58.651207,-9.299348"
+		call Movetoloc "258.018463,58.575542,-26.168758"
+        oc !c -Pause igw:${Me.Name}
+        wait 10
+		oc !c -ApplyVerbForWho igw:${Me.Name} "heart_of_fear" "Pick up"
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "238.306915,56.374191,2.306271"
+		call Movetoloc "181.914139,61.535992,1.782849"
+		call Movetoloc "107.717537,56.966179,-15.612944"
+		call Movetoloc "48.644409,51.282692,6.576245"
+		call Movetoloc "-5.629417,49.851810,6.751636"
 		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot4}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 5
-		echo Trashpack 5 ${TrashSpot5}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot5}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 6
-		echo Trashpack 6 ${TrashSpot6}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot6}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 7
-		echo Trashpack 7 ${TrashSpot7}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot7}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-        ;// Trashpack 8
-		echo Trashpack 8 ${TrashSpot8}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot8}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 9
-		echo Trashpack 9  ${TrashSpot9}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot9}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 10
-		echo Trashpack 10  ${TrashSpot10}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot10}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 11
-		echo Trashpack 11  ${TrashSpot11}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot11}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 12
-		echo Trashpack 12  ${TrashSpot12}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot12}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 13
-		echo Trashpack 13  ${TrashSpot13}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot13}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 14
-		echo Trashpack 14  ${TrashSpot14}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot14}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 15
-		echo Trashpack 15  ${TrashSpot15}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot15}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 16
-		echo Trashpack 16  ${TrashSpot16}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot16}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 17
-		echo Trashpack 17  ${TrashSpot17}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot17}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 18
-		echo Trashpack 18  ${TrashSpot18}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot18}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 19
-		echo Trashpack 19  ${TrashSpot19}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot19}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 20
-		echo Trashpack 20  ${TrashSpot20}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot20}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// Trashpack 21
-		echo Trashpack 21  ${TrashSpot21}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 5
-		Obj_OgreIH:ChangeCampSpot["${TrashSpot21}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-		wait 5
-		call Obj_OgreIH.KillActorType 20
-		wait 5
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
-
-		;// NamedMob
-		echo Named ${_NamedNPC} ${NamedMob}
-		call Obj_OgreUtilities.PreCombatBuff 5
-		Actor[namednpc,"${_NamedNPC}"]:DoTarget
-		wait 20
-		call Obj_OgreUtilities.HandleWaitForCombatWithNPC "${_NamedNPC}" ClearTargetIfTargetDistanceOver 100
-		wait 10
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-    
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 30
+		call Movetoloc "-50.430687,52.502903,1.181197"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call WaitForNamed
+		call HandleNamed
+        return TRUE
     }
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 8 - The Caretaker          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named8(string _NamedNPC="Doesnotexist")
+	{
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "2.358747,49.297222,-2.052139"
+		call Movetoloc "0.898574,34.172935,-67.972511"
+		call Movetoloc "-3.373201,1.076686,-183.825089"
+		call Movetoloc "-1.186762,-1.642754,-257.862183"
+		call Movetoloc "-83.238441,0.268004,-271.046600"
+		call Movetoloc "-130.727509,0.563460,-263.847900"
+		call Movetoloc "-173.042389,1.027144,-225.649048"
+		call Movetoloc "-199.138840,7.501280,-216.896179"
+		call Obj_OgreUtilities.PreCombatBuff 5
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 30
+		call Movetoloc "-232.485962,18.035357,-217.094009"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
+        return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 9 - The Skeletal Lord          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named9(string _NamedNPC="Doesnotexist")
+	{
+		echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-150.049423,0.496425,-232.637512"
+		call Movetoloc "-89.735855,-1.091660,-304.081451"
+		call Movetoloc "64.752312,0.339199,-280.605591"
+		call Movetoloc "120.392914,0.323213,-311.882935"
+		call Movetoloc "143.892914,0.125560,-326.595276"
+		call Movetoloc "170.354080,1.540244,-324.791534"
+		call Movetoloc "189.110550,7.295640,-303.206177"
+		call Movetoloc "223.089600,-0.098183,-325.221039"
+		call Movetoloc "231.898346,7.883441,-288.912079"
+		call Movetoloc "229.838058,7.347484,-253.585922"
+		call Movetoloc "208.340149,7.650663,-245.150833"
+		call Movetoloc "177.260727,2.495302,-268.066620"
+		call Movetoloc "191.948105,7.299803,-302.104462"
+		call Movetoloc "209.628342,10.922079,-274.568970"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
+        return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 10 - Terror          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named10(string _NamedNPC="Doesnotexist")
+	{
+		echo ${Time}: Moving to ${_NamedNPC}
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		oc !c -ApplyVerbForWho igw:${Me.Name} "Skeletal Lord's skull" "investigate the skull"
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "192.521393,7.303085,-301.165771"
+		call Movetoloc "139.740433,0.089621,-327.209534"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} Place Heart of Fear
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "135.722473,0.166585,-321.605438"
+		call Movetoloc "124.789627,0.423566,-331.713196"
+		Obj_OgreIH:ChangeCampSpot["120.986847,0.929931,-335.591217"]
+		wait 20
+		oc !c -CS_ClearCampSpot igw:${Me.Name}
+		oc !c -FlyDown
+		wait 10
+		oc !c -FlyStop
+		wait 20
+		call Movetoloc "1.292689,-3.354752,-375.371582"
+		call Movetoloc "1.783633,-3.346837,-387.680542"
+		call Movetoloc "2.517439,51.692524,-467.605927"
+		call Movetoloc "22.839073,46.315231,-446.604675"
+		call Movetoloc "10.123634,36.194069,-441.431641"
+		call Movetoloc "27.037628,36.399788,-440.066467"
+		call Movetoloc "10.123238,26.500528,-431.007446"
+		call Movetoloc "38.033024,27.055254,-428.835571"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal master's heart of fear
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "13.511398,18.878584,-421.119965"
+		call Movetoloc "44.629635,17.037619,-419.356384"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal lord's heart of fear
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "11.096359,6.684845,-411.050140"
+		call Movetoloc "53.854942,7.273705,-409.713348"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal destructor's heart of fear
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "2.557263,-3.345994,-381.943054"
+		call Movetoloc "1.781521,51.692524,-468.282135"
+		call Movetoloc "-19.710703,46.315224,-447.342499"
+		call Movetoloc "-6.245551,36.194073,-441.882019"
+		call Movetoloc "-22.185623,36.194061,-439.846069"
+		call Movetoloc "-6.244043,26.500523,-430.866180 "
+		call Movetoloc "-32.758011,26.503822,-428.980774"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal master's corrupted mind
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "-8.416605,18.878139,-420.733185"
+		call Movetoloc "-40.815086,17.037779,-419.033417"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal lord's corrupted mind
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "-8.289022,6.684845,-410.682251"
+		call Movetoloc "-48.809883,7.273705,-409.053528"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} use skeletal lord's corrupted mind
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "1.932175,-3.347848,-378.426270"
+		call Movetoloc "1.716435,17.805641,-417.325287"
+		call Movetoloc "5.641672,36.831432,-436.408173"
+		call Obj_OgreUtilities.PreCombatBuff 5
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 30
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+		Ob_AutoTarget:AddActor["Amygdalan Inquisitor",0,FALSE,FALSE]
+		Ob_AutoTarget:AddActor["Amygdalan Knight",0,FALSE,FALSE]
+        oc !c -ChangeCampSpotWho ${Me.Name} 1.083702 52.063770 -453.158417
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		oc !c -ChangeCampSpotWho ${Me.Name} -1.763619 45.366837 -444.969208
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		oc !c -Walk
+		oc !c -Crouch
+		call HandleNamed
+		wait 10
+		oc !c -Walk
+		oc !c -Crouch
+        return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷                  FUNCTIONS                 ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function CheckASpecificZone(string _ZoneName)
+	{
+		variable persistentref ICARef
+		ICARef:SetReference["Script[${OgreInstanceControllerAssisterScriptName}].VariableScope.Obj_OgreUtilities.Obj_ZoneReset"]
+
+		if ${ICARef.Get_ZoneData_GV[gcsRetValue,"${_ZoneName}"]}
+		{
+			echo Same zone (${_ZoneName}): ${Zone.Name.Equal["${_ZoneName}"]}
+			echo IsSet ${gcsRetValue.Element["IsSet"]}
+			echo Resettable ${gcsRetValue.Element["Resettable"]}
+			echo TimeLeft ${gcsRetValue.Element["TimeLeft"]}
+			echo TextTimeLeft ${gcsRetValue.Element["TextTimeLeft"]}
+		}
+		else
+			echo GetZoneData was false
+	}
+
+	function:bool CheckZoneResetStatus()
+	{
+		echo ${Time}: Entering CheckZoneResetStatus
+		Ogre_Instance_Controller_Assister:PopulateInternalMemory
+		wait 2
+		while ${Ogre_Instance_Controller_Assister.bPopulateInternalMemoryRunning}
+		wait 2
+	   
+		call CheckASpecificZone "${sZoneName}"
+		
+		echo ${Time}: Is the zone able to be reset? [${gcsRetValue.Element["Resettable"]}]
+		if !${gcsRetValue.Element["Resettable"]}
+		{
+			iZoneResetTime:Set[${Math.Calc[${Time.Timestamp}+${gcsRetValue.Element["TimeLeft"]}+5].Int}]
+			echo ${Time}: \arWaiting until zone can be reset. [${Math.Calc[${iZoneResetTime}-${Time.Timestamp}].Int} seconds] [${Math.Calc[(${iZoneResetTime}-${Time.Timestamp})/60].Int} minutes]
+			while ${Time.Timestamp} < ${iZoneResetTime}
+			{
+				;echo ${Time}: Time remaining until reset: [${Math.Calc[${iZoneResetTime}-${Time.Timestamp}].Int} seconds] [${Math.Calc[(${iZoneResetTime}-${Time.Timestamp})/60].Int} minutes]
+				wait 50
+			}
+			
+			echo ${Time}: \agZone can now be reset!	
+			return TRUE
+		}			
+	}
+	
+	function:bool ResetZone()
+	{
+		echo ${Time}: Entering ResetZone
+		if ${Zone.ShortName.Equal["${sZoneShortName}"]} && ${Zone.Name.Equal["${sZoneName}"]}
+		{
+			echo ${Time}: I am still in ${sZoneName} and I can reset it. Zoning out to reset.
+			;oc !c -cfw igw:${Me.Name} -Zone
+			oc !c -CS_ClearCampSpot igw:${Me.Name}
+			wait 10
+			relay all face -5000 5000
+			wait 10
+            relay all press -hold ${OgreForwardKey}
+            wait 30
+            relay all press -release ${OgreForwardKey}
+			call Obj_OgreUtilities.HandleWaitForZoning
+
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+			
+			wait 100
+		}
+		
+		echo ${Time}: Resetting the zone.
+		relay all OgreBotAPI:ResetZone["igw:${Me.Name}","${sZoneName}"]
+		
+		wait 20
+		
+		echo ${Time}: Checking to see if the zone reset was successful.
+		call This.CheckZoneResetStatus
+		if !${Return}
+		{
+			echo ${Time}: Failed to reset zone.
+			oc Failed to reset zone.
+			return FALSE
+		}
+		
+		return TRUE
+	}
+
+	function Movetoloc(point3f loc)
+	{
+		Obj_OgreIH:SetCampSpot
+		Obj_OgreIH:ChangeCampSpot["${loc}"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 5
+		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
+		call Obj_OgreIH.KillActorType 5
+		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		eq2execute summon
+	}
+
+	function PostNamed()
+	{
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		call Obj_OgreIH.KillActorType 10
+        eq2execute summon
+		call Obj_OgreUtilities.WaitForLootWindow
+		call Obj_OgreUtilities.WaitWhileGroupMembersDead
+		wait 10
+	}
+
+	function HandleNamed()
+	{
+		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
+		{
+			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
+		}
     
+        wait 20
+        if ${Me.InCombat}
+        {
+            while ${Me.InCombat}
+                waitframe
+        }
+		call PostNamed
+	}
+
+	function WaitForNamed()
+	{
+		if ${Actor["${_NamedNPC}"](exists)}
+		{
+			if ${Actor["${_NamedNPC}"].Type.Equal["NamedNPC"]}
+			{
+				echo ${Time}: Waiting for ${_NamedNPC} to die.
+				while ${Actor["${_NamedNPC}"].Type.Equal["NamedNPC"]}
+					waitframe
+				wait 10                
+			}
+		}
+	}
+
+    function PrepareToPlaceItem(string _actorName)
+    {
+        if ${Me.In3rdPersonView}
+        {
+            call Obj_OgreUtilities.Set_FirstPersonView
+            wait 5
+            call Obj_OgreUtilities.Set_LookDown 30	
+            wait 5
+        }
+        Actor["${_actorName.Escape}"]:DoubleClick
+        wait 5
+        Mouse:SetPosition[${Math.Calc[(${Display.WindowWidth}*50)/100].Int},${Math.Calc[(${Display.WindowHeight}*50)/100].Int}]
+    }
+
+    function PlaceItemNoChecks(string _actorName)
+    {
+        Mouse:SetPosition[${Math.Calc[(${Display.WindowWidth}*50)/100].Int},${Math.Calc[(${Display.WindowHeight}*50)/100].Int}]
+        wait 5
+        Mouse:LeftClick    
+        wait 20
+    }
+
+    function FixView()
+    {
+        call Obj_OgreUtilities.ResetCameraAngle
+        call Obj_OgreUtilities.Set_ZoomOut 1
+        wait 5
+    }
+}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷                    ATOMS                   ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+atom atexit()
+{
+	echo ${Time}: \agFinished auto-running ${sZoneName}.
 }
