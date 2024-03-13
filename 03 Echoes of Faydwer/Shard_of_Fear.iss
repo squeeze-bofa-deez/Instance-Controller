@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: The Shard of Fear | Author: The Marty Party | Date: 07 Mar 2024 | Version: 2.0
+; Title: The Shard of Fear | Author: The Marty Party | Date: 07 Mar 2024 | Version: 2.1
 ;================================================================================
 
 variable string sZoneName="Shard of Fear"
@@ -32,7 +32,7 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 2.0
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 2.1
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -167,8 +167,11 @@ objectdef Object_Instance
 			call Movetoloc "1.840139,36.152531,-435.727234"
 			call Movetoloc "2.004151,12.817632,-412.322296"
 			call Movetoloc "3.301099,-1.879076,-367.074951"
-			Obj_OgreIH:ChangeCampSpot["2.982432,-6.302072,-359.419220"]
+			Obj_OgreIH:ChangeCampSpot["3.168947,-3.207060,-357.52716"]
 			wait 20
+			relay all press -hold ${OgreBackwardKey}
+            wait 2
+            relay all press -release ${OgreBackwardKey}
 			oc !c -CS_ClearCampSpot igw:${Me.Name}
 			oc !c -FlyDown
 			wait 10
@@ -181,6 +184,7 @@ objectdef Object_Instance
 			call Movetoloc "72.327759,52.785973,1.871266"
 			call Movetoloc "128.247406,57.307831,-15.356686"
 			call Movetoloc "229.339294,58.020168,21.881876"
+			call Movetoloc "207.853546,34.665825,184.818436"
 			call Movetoloc "189.696381,7.249128,320.725952"
 			call Movetoloc "112.176216,4.374789,381.246216"
 			call Movetoloc "-2.380213,11.564971,479.742889"
@@ -206,7 +210,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 1 - The Skeletal Destructor          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷      NAMED 1 - The Skeletal Destructor      ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
     function:bool Named1(string _NamedNPC="Doesnotexist")
 	{
@@ -230,7 +234,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 2 - Spinechill Venomfang          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷       NAMED 2 - Spinechill Venomfang       ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
     function:bool Named2(string _NamedNPC="Doesnotexist")
 	{
@@ -241,6 +245,92 @@ objectdef Object_Instance
 		wait 30
 		oc !c -Resume igw:${Me.Name}
 		call Movetoloc "-180.185806,7.933929,344.447906"
+		call Movetoloc "-224.599991,14.639090,216.863083"
+		call Movetoloc "-255.108719,16.976032,206.832123"
+		call Movetoloc "-255.815201,17.276550,190.181274"
+
+		;//First Caller
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		oc !c -ChangeCampSpotWho ${Me.Name} -270.141663 20.280252 194.740936
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -263.566589 18.688850 190.277298
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		;//Second Caller
+        OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -299.905029 20.283060 177.839355
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -263.566589 18.688850 190.277298
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		;//Third Caller
+        OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -304.258972 20.283062 198.839767
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
+		eq2execute target a Thulian Caller
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -263.566589 18.688850 190.277298
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call PrepareToPlaceItem "a dead lizardman"
+        wait 10
+		oc !c -ChangeCampSpotWho ${Me.Name} -295.476959 21.131815 189.309906
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		call PlaceItemNoChecks "a dead lizardman"
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
+		wait 5
+		oc !c -ChangeCampSpotWho ${Me.Name} -255.815201 17.276550 190.181274
+		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		eq2execute Target_None
+		call Obj_OgreUtilities.HandleWaitForCombat 10
+		call FixView
+		call Movetoloc "-294.525635,21.131830,189.442612"
+        oc !c -Pause igw:${Me.Name}
+        wait 10
+		oc !c -ApplyVerbForWho igw:${Me.Name} "heart_of_fear" "Pick up"
+		wait 30
+		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "-255.815201,17.276550,190.181274"
+		call Movetoloc "-175.019958,7.881152,345.047180"
 		call Movetoloc "-118.548592,9.263172,313.566467"
 		call Movetoloc "-3.530727,10.980764,313.044495 "
 		call Movetoloc "29.119467,5.916119,436.631592"
@@ -266,7 +356,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 3 - The Skeletal Master          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷        NAMED 3 - The Skeletal Master        ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
     function:bool Named3(string _NamedNPC="Doesnotexist")
 	{
@@ -282,7 +372,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 4 - Kyr'Tok          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷              NAMED 4 - Kyr'Tok              ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
     function:bool Named4(string _NamedNPC="Doesnotexist")
 	{
@@ -298,11 +388,11 @@ objectdef Object_Instance
 		call Movetoloc "299.927277,50.497459,240.591873"
 		call Movetoloc "314.157135,61.573761,205.509018"
 		call Movetoloc "308.930817,61.814728,141.843216"
-		call Movetoloc "307.875122,73.190506,114.612022"
+		call Movetoloc "309.107941,71.928452,115.922562"
 		call Obj_OgreUtilities.PreCombatBuff 5
 		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
 		wait 30
-		call Movetoloc "310.203857,78.097847,107.840858"
+		call Movetoloc "309.122803,78.097977,107.238487"
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
         wait 20
 		call HandleNamed
@@ -310,7 +400,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 5 - Fearmonger          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷            NAMED 5 - Fearmonger            ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
     function:bool Named5(string _NamedNPC="Doesnotexist")
 	{
@@ -329,7 +419,7 @@ objectdef Object_Instance
 	}
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 6 - Kza'Bok          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷              NAMED 6 - Kza'Bok              ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
 	function:bool Named6(string _NamedNPC="Doesnotexist")
 	{
@@ -346,20 +436,23 @@ objectdef Object_Instance
 	}
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 7 - Dracoliche          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷            NAMED 7 - Dracoliche            ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
 	function:bool Named7(string _NamedNPC="Doesnotexist")
 	{
 		echo ${Time}: Moving to ${_NamedNPC}
 		call Movetoloc "249.354218,56.601452,12.251396"
-		call Movetoloc "238.394684,56.452919,3.351530"
+		call Movetoloc "234.592560,57.013672,9.443365"
 		;//First Caller
+		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		oc !c -ChangeCampSpotWho ${Me.Name} 242.987289 57.702778 -4.296951
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
-		oc !c -ChangeCampSpotWho ${Me.Name} 235.800369 56.918808 8.743260
-		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
 		eq2execute target a Thulian Caller
 		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 237.526047 56.615631 5.091315
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
 		call PrepareToPlaceItem "a dead lizardman"
         wait 10
 		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
@@ -367,7 +460,7 @@ objectdef Object_Instance
 		call PlaceItemNoChecks "a dead lizardman"
 		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		wait 5
-		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
 		call Obj_OgreUtilities.HandleWaitForCampSpot 30
 		eq2execute Target_None
 		call Obj_OgreUtilities.HandleWaitForCombat 10
@@ -380,10 +473,12 @@ objectdef Object_Instance
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
 		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
-		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
-		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
 		eq2execute target a Thulian Caller
 		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 237.526047 56.615631 5.091315
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
 		call PrepareToPlaceItem "a dead lizardman"
         wait 10
 		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
@@ -391,7 +486,7 @@ objectdef Object_Instance
 		call PlaceItemNoChecks "a dead lizardman"
 		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		wait 5
-		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
 		call Obj_OgreUtilities.HandleWaitForCampSpot 30
 		eq2execute Target_None
 		call Obj_OgreUtilities.HandleWaitForCombat 10
@@ -404,10 +499,12 @@ objectdef Object_Instance
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
 		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
 		call Obj_OgreUtilities.HandleWaitForCampSpot 20
-		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
-		call Obj_OgreUtilities.HandleWaitForCampSpot 30
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
+		call Obj_OgreUtilities.HandleWaitForCampSpot 50
 		eq2execute target a Thulian Caller
 		call Obj_OgreUtilities.HandleWaitForCombat 10
+		oc !c -ChangeCampSpotWho ${Me.Name} 237.526047 56.615631 5.091315
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
 		call PrepareToPlaceItem "a dead lizardman"
         wait 10
 		oc !c -ChangeCampSpotWho ${Me.Name} 258.950134 58.575623 -27.999306
@@ -415,7 +512,7 @@ objectdef Object_Instance
 		call PlaceItemNoChecks "a dead lizardman"
 		OgreBotAPI:Target["${Me.Name}","${Me.Name}"]
 		wait 5
-		oc !c -ChangeCampSpotWho ${Me.Name} 238.394684 56.452919 3.351530
+		oc !c -ChangeCampSpotWho ${Me.Name} 234.592560 57.013672 9.443365
 		call Obj_OgreUtilities.HandleWaitForCampSpot 30
 		eq2execute Target_None
 		call Obj_OgreUtilities.HandleWaitForCombat 10
@@ -444,7 +541,7 @@ objectdef Object_Instance
     }
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 8 - The Caretaker          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷           NAMED 8 - The Caretaker           ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
 	function:bool Named8(string _NamedNPC="Doesnotexist")
 	{
@@ -468,7 +565,7 @@ objectdef Object_Instance
 	}
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 9 - The Skeletal Lord          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷         NAMED 9 - The Skeletal Lord         ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
 	function:bool Named9(string _NamedNPC="Doesnotexist")
 	{
@@ -494,7 +591,7 @@ objectdef Object_Instance
 	}
 
 ;================================================================================
-; ˏˋ°•*⁀➷ˏˋ°•*⁀➷          NAMED 10 - Terror          ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷              NAMED 10 - Terror              ˏˋ°•*⁀➷ˏˋ°•*⁀➷
 ;================================================================================
 	function:bool Named10(string _NamedNPC="Doesnotexist")
 	{
@@ -511,10 +608,19 @@ objectdef Object_Instance
 		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} Place Heart of Fear
 		wait 30
 		oc !c -Resume igw:${Me.Name}
+		call Movetoloc "131.398300,0.172671,-318.378906"
+		oc !c -Pause igw:${Me.Name}
+        wait 10
+		relay all eq2execute apply_verb ${Actor[Query,Type="NoKill NPC"&& Name=""].ID} Place Heart of Fear
+		wait 30
+		oc !c -Resume igw:${Me.Name}
 		call Movetoloc "135.722473,0.166585,-321.605438"
 		call Movetoloc "124.789627,0.423566,-331.713196"
 		Obj_OgreIH:ChangeCampSpot["120.986847,0.929931,-335.591217"]
 		wait 20
+		relay all press -hold ${OgreBackwardKey}
+		wait 2
+		relay all press -release ${OgreBackwardKey}
 		oc !c -CS_ClearCampSpot igw:${Me.Name}
 		oc !c -FlyDown
 		wait 10
