@@ -1,61 +1,54 @@
-variable string sZoneName="Vasty Deep: The Vestigial Cella"
+;================================================================================
+; Title: Vasty Deep: The Vestigial Cella | Author: Unknown, The Marty Party | Date: 15 Mar 2024 | Version: 1.1
+;================================================================================
+
 variable string sZoneShortName="exp06_dun_vastydeep03"
+variable string sZoneName="Vasty Deep: The Vestigial Cella"
+variable(global) collection:string gcsRetValue
+variable(global) int iZoneResetTime=0
 
 #include "${LavishScript.HomeDirectory}/Scripts/EQ2OgreBot/InstanceController/Ogre_Instance_Include.iss"
 
 function main(int _StartingPoint=0)
 {
-call function_Handle_Startup_Process "-NoAutoLoadMapOnZone"
+	call function_Handle_Startup_Process ${_StartingPoint} "-NoAutoLoadMapOnZone" ${Args.Expand}
 }
-atom atexit()
-{
-	echo ${Time}: ${Script.Filename} done
-}
+
 objectdef Object_Instance
 {
 	function:bool RunInstance(int _StartingPoint=0)
 	{
     	if ${_StartingPoint} == 0
 		{
-			call Obj_OgreIH.ZoneNavigation.GetIntoZone "${sZoneName}"
+            ogre ica
+            wait 2
+            
+			call Obj_OgreIH.CD.GetIntoZone
 			if !${Return}
 			{
-
-             Obj_OgreIH:Actor_Click["zone_to_vastydeep03"]
-			 call Obj_OgreUtilities.HandleWaitForZoning
-			 Ogre_Instance_Controller:ZoneSet
-			 call Obj_OgreIH.Set_VariousOptions
-			 call Obj_OgreIH.Set_PriestAscension FALSE
-			 Obj_OgreIH:Set_NoMove
-			 Obj_OgreIH:SetCampSpot
-			 call Obj_OgreUtilities.PreCombatBuff 5
-			 _StartingPoint:Inc
+				Obj_OgreIH:Actor_Click["zone_to_vastydeep03"]
+				call Obj_OgreUtilities.HandleWaitForZoning
 				Obj_OgreIH:Message_FailedZone
 				return FALSE
 			}
+
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.1
+					
+        	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
+			
 			Ogre_Instance_Controller:ZoneSet
+			;Obj_OgreUtilities.OgreNavLib:ChangeLoadingPath["InstanceController"]
+			Obj_OgreUtilities.OgreNavLib:LoadMap
+			
 			call Obj_OgreIH.Set_VariousOptions
-			call Obj_OgreIH.Set_PriestAscension FALSE
+			OgreBotAPI:AutoTarget_SetScanRadius[igw:${Me.Name}, "25"]
+
 			Obj_OgreIH:Set_NoMove
-			Obj_OgreIH:SetCampSpot
-			call Obj_OgreUtilities.PreCombatBuff 5
 			_StartingPoint:Inc
-
-			;Delete the following if you don't want them.
-			;oc !ci -ChangeOgreBotUIOption igw:${Me.Name} checkbox_settings_cure TRUE TRUE
-			;oc !ci -ChangeOgreBotUIOption igw:${Me.Name} checkbox_settings_crowdcontrol FALSE TRUE
-			;oc !ci -ChangeOgreBotUIOption igw:${Me.Name} checkbox_settings_facenpc TRUE TRUE
-            oc !ci -ChangeOgreBotUIOption ${Me.Name} checkbox_autotarget_outofcombatscanning FALSE
-			;relay all eq2execute merc ranged
-			;relay all eq2execute merc backoff
-			OgreIH:Set_Debug_Mode[TRUE]
-
-		Change starting point below to start script after a certain named. (for debugging only)		
-			_StartingPoint:Set[0]
-			_StartingPoint:Inc
+			;_StartingPoint:Set[2]
 		}
 
-		;Enter name and shinies nav point for Named 1.
 		if ${_StartingPoint} == 1
 		{
 			call This.Named1 "The Wight Specter"
@@ -67,7 +60,6 @@ objectdef Object_Instance
             _StartingPoint:Inc
 		}
 
-		;Enter name and shinies nav point for Named 2.
 		if ${_StartingPoint} == 2
 		{
 			call This.Named2 "Ecto Malgum"
@@ -78,8 +70,7 @@ objectdef Object_Instance
 			}
             _StartingPoint:Inc
 		}
-
-		;Enter name and shinies nav point for Named 3.				
+			
 		if ${_StartingPoint} == 3
 		{
 			call This.Named3 "Crystasha"
@@ -89,9 +80,9 @@ objectdef Object_Instance
 				return FALSE
 			}
             _StartingPoint:Inc
+
 		}
 
-		;Enter name and shinies nav point for Named 4.	
 		if ${_StartingPoint} == 4
 		{	
 			call This.Named4 "Judithania"
@@ -101,9 +92,9 @@ objectdef Object_Instance
 				return FALSE
 			}
             _StartingPoint:Inc
+
 		}
 
-		;Enter name and shinies nav point for Named 5.
 		if ${_StartingPoint} == 5
 		{
 			call This.Named5 "Kraitenae"
@@ -113,9 +104,9 @@ objectdef Object_Instance
 				return FALSE
 			}
             _StartingPoint:Inc
+
 		}
 
-		;Enter name and shinies nav point for Named 6.
 		if ${_StartingPoint} == 6
 		{
 			call This.Named6 "Queen Gwarthlea"
@@ -125,818 +116,352 @@ objectdef Object_Instance
 				return FALSE
 			}
             _StartingPoint:Inc
+
 		}
 
-		;Enter /loc for the zone out and change _StartingPoint == 4 for Event Heroic	
+		;// Finish zone (zone out)
 		if ${_StartingPoint} == 7
 		{
-			 Obj_OgreIH:SetCampSpot
-            echo Evacing
-			oc !c -Evac
-			call Obj_OgreUtilities.HandleWaitForZoning
-			wait 15000
-			oc !c -Resume
-            Obj_OgreIH:SetCampSpot
-			Obj_OgreIH:ChangeCampSpot["12.436484,-11.874793,8.164172"]
-			call Obj_OgreUtilities.HandleWaitForCampSpot 10
-			oc !c -Zone
+            Obj_OgreIH:LetsGo
+        	eq2execute Target_None
+
+			call Movetoloc "-169.820129,-74.996765,67.227371"
+			call Movetoloc "-188.874298,-74.995796,16.507742"
+			eq2execute target a deep cave fish
+			wait 20
+			call Obj_OgreUtilities.HandleWaitForCombat
 			wait 10
-			oc !c all -door 1
+
+			oc !c -cfw igw:${Me.Name} -Evac
 			call Obj_OgreUtilities.HandleWaitForZoning
-			wait 100
-			call Obj_OgreIH.ZoneNavigation.ZoneOut
-			wait 10
-			relay all OgreBotAPI:ZoneResetAll
-			wait 100
-			relay all OgreBotAPI:ResetZone["Vasty Deep: The Vestigial Cella"]
 			wait 50
-			relay all OgreBotAPI:ZoneResetAll
-			wait 100
-			relay all OgreBotAPI:ResetZone["Vasty Deep: The Vestigial Cella"]
-			wait 50
-			relay all OgreBotAPI:ZoneResetAll
-			wait 100
-            Obj_OgreIH:ClearCampSpot
-		    OgreBotAPI:ZoneResetAll
-			wait 50
-			OgreBotAPI:ResetZone["Vasty Deep: The Vestigial Cella"]
-			wait 50
-			OgreBotAPI:resume["${Me.Name}"]
-            wait 10
-            Obj_OgreIH:SetCampSpot
-			wait 10   
-			relay all OgreBotAPI:ZoneResetAll
-			wait 100
-			relay all OgreBotAPI:ResetZone["Vasty Deep: The Vestigial Cella"]
-			wait 50     
+			call Movetoloc "9.510164,-12.999029,5.376696"
+			call ManaarQuest
+			call Movetoloc "-11.135961,-10.366313,-2.646774"
+			call Movetoloc "-58.428188,-0.098421,-1.905531"
+
+			if ${Actor["A Drenched Lockbox"](exists)} && ${Math.Distance[${Actor["A Drenched Lockbox"].Loc},-11.135961,-10.366313,-2.646774]} <= 5
 			{
-				Obj_OgreIH:Message_FailedZoneOut
-				return FALSE
+				oc !c -ChangeCampSpotWho ${Me.Name} -11.135961 -10.366313 -2.646774
+				call Obj_OgreUtilities.HandleWaitForCampSpot 40
+				wait 10
 			}
+
+			call Movetoloc "-58.428188,-0.098421,-1.905531"
+			call Movetoloc "-11.135961,-10.366313,-2.646774"
+
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
+			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",FALSE]
+			
+			;//Check if the zone can be reset.
+			call This.CheckZoneResetStatus
+			if !${Return}
+            {             
+                return FALSE
+            }
+			;//Reset the zone
+			call This.ResetZone
+			if !${Return}
+            {                
+                return FALSE
+            }		
+			
 			_StartingPoint:Inc
 		}
 		return TRUE
 	}
 
-/**********************************************************************************************************
-    Named 1 **********************    Move to, spawn and kill -   ***************************
-***********************************************************************************************************/
-
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷         NAMED 1 - The Wight Specter         ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
 	function:bool Named1(string _NamedNPC="Doesnotexist")
 	{
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-		;echo ${Time}: Starting Named1 function
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-10.754206,-10.366313,-2.463679"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-52.800659,1.621083,-1.679839"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-84.110207,1.627729,-1.617496"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}"
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-
-/**********************************************************************************************************
- 	Named 2 ********************    Move to, spawn and kill -  **************************
-***********************************************************************************************************/
-	
-function:bool Named2(string _NamedNPC="Doesnotexist")
-	{
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-		;echo ${Time}: Starting Named2 function
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-52.800659,1.621083,-1.679839"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-		
-		Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-63.247490,0.002500,-28.293776"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 30
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-54.548958,3.731771,-42.317493"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-37.465611,9.905511,-65.736290"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-6.147725,8.082129,-75.134834"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-19.044220,8.082129,-89.694466"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}" 
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-
-/**********************************************************************************************************
- 	Named 3 *********************    Move to, spawn and kill -  ******************************
-***********************************************************************************************************/
-	
-function:bool Named3(string _NamedNPC="Doesnotexist")
-		{
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-		;echo ${Time}: Starting Named3 function
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-35.510521,8.774971,-105.074020"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-94.799835,20.081867,-106.204926"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 30
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 50
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-97.316589,19.577530,-135.973816"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 500
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 50
-    
-		Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-102.731461,20.023849,-144.863510"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 500
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 50
-	
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}" 
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-
-/**********************************************************************************************************
- 	Named 4 ***********************    Move to, spawn and kill -  *********************************
-***********************************************************************************************************/
-	
-function:bool Named4(string _NamedNPC="Doesnotexist")
-		{
-
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-		;echo ${Time}: Starting Named4 function
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-100.504974,20.139311,-145.099960"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-148.472397,20.002501,-148.152542"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}" 
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-
-/**********************************************************************************************************
- 	Named 5 **********************    Move to, spawn and kill -  *********************************
-***********************************************************************************************************/
-	
-function:bool Named5(string _NamedNPC="Doesnotexist")
-		{
-
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-		;echo ${Time}: Starting Named5 function
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-151.825760,18.360945,-129.270340"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-153.361511,12.214003,-93.893852"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 30
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-173.035599,10.575760,-76.653526"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 10
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-193.455460,10.560400,-84.988495"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 50
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 10
-
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}" 
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-/**********************************************************************************************************
- 	Named 6 **********************    Move to, spawn and kill -  *********************************
-***********************************************************************************************************/
-	
- function:bool Named6(string _NamedNPC="Doesnotexist")
-		{
-
-		Obj_OgreIH:AutoTarget_AddActor["",0,FALSE,TRUE]
-
-		;Move to named and spawn
-		call initialise_move_to_next_boss "${_NamedNPC}"
-		;echo ${Time}: Starting Named6 function
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-196.593231,12.256557,-71.132263"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 50
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-207.108704,13.132140,-55.204216"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 100
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-215.914825,20.164740,-22.683764"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 100
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-220.310532,20.358646,-12.986840"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 100
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        Obj_OgreIH:SetCampSpot
-	    Obj_OgreIH:ChangeCampSpot["-256.912231,20.834169,-14.447024"]
-	    call Obj_OgreUtilities.HandleWaitForCampSpot 100
-	    call Obj_OgreUtilities.HandleWaitForCombat
-	    wait 30
-
-        OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
-		wait 5
-		OgreBotAPI:CastAbility_Relay["all","Bladedance"]
-		wait 5
-		;OgreBotAPI:CastAbility_Relay["all","Bolster"]
-		;wait 5
-		OgreBotAPI:CastAbility_Relay["all","Porcupine"]
-
-		;attempt to pull mobs back into tunnel
-		call CampSpotAt ${Me.Name} -257.16 13.24 18.40
-		while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-257.16,13.24,18.40]} > 4 && ${botUtil.MobsAggro} == 0 && ${Me.Y} > -25
-		{
-			waitframe
-		}
-		call CampSpotAt ${Me.Name} -257.20 19.62 -16.28
-		while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-257.20,19.62,-16.28]} > 4 && ${botUtil.MobsAggro} > 0 && ${Me.Y} > -25
-		{
-			waitframe
-		}
-	
-		;if i havent fallen down into water, run across bridge
-		if  ${Me.Y} > -25
-		{
-			call MovementManager -257.36 10.00 39.59 "Vasty Deep: The Vestigial Cella" ${wGroup} FALSE ${ignoreDistance} ${ignoreHealth} ${minLevel} ${maxLevel} ${minMobs}
-		}
-		call FightQueen
-
-		if !${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNPC}"]
-			return TRUE
-		}
-		call kill_named "${_NamedNPC}"
-		if ${Actor[namednpc,"${_NamedNPC}"].ID(exists)}
-		{
-			Obj_OgreIH:Message_FailedToKill["${_NamedNPC}"]
-			return FALSE
-		}
-		return TRUE
-	}
-
-}
-/***********************************************************************************************************
-***********************************************  FUNCTIONS  ************************************************    
-************************************************************************************************************/
-
-function initialise_move_to_next_boss(string _NamedNPC)
-	{
-		oc ${Me.Name} is moving to ${_NamedNPC}.
-		Obj_OgreIH:SetCampSpot
-		call Obj_OgreUtilities.PreCombatBuff 5
-		wait 30
-		if ${Obj_OgreIH.SoloMode}
-			{
-				eq2execute merc resume
-				wait 30
-				eq2execute merc ranged
-				eq2execute merc backoff
-			}
-		Obj_OgreIH:AutoTarget_ClearActors
-	}
-function move_to_next_waypoint(point3f waypoint)
-	{
-		Obj_OgreIH:SetCampSpot
-		Obj_OgreIH:ChangeCampSpot["${waypoint}"]
-		call kill_trash
-	}
-function kill_trash()
-	{
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		call Obj_OgreUtilities.HandleWaitForCombat 50 TRUE
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		call Obj_OgreUtilities.HandleWaitForGroupDistance 5
-	}
-function prepull(point3f PrePullSpot)
-	{
-		Obj_OgreIH:SetCampSpot
-		Obj_OgreIH:ChangeCampSpot["${PrePullSpot}"]
-		call kill_trash
-		call Obj_OgreUtilities.PreCombatBuff 5
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "8.051156,-13.750236,4.406774"
+		call ManaarQuest
+		call Movetoloc "-10.754206,-10.366313,-2.463679"
+		call Movetoloc "-52.800659,1.621083,-1.679839"
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
 		wait 20
+		call Movetoloc "-84.110207,1.627729,-1.617496"
+		call HandleNamed
+		return TRUE
 	}
 
-function kill_named(string _NamedNPC, point3f KillSpot)
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷             NAMED 2 - Ecto Malgum             ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named2(string _NamedNPC="Doesnotexist")
 	{
-		oc ${Me.Name} is pulling ${_NamedNPC}
-		Obj_OgreIH:SetCampSpot
-		Obj_OgreIH:ChangeCampSpot["${KillSpot}"]
-		call Obj_OgreUtilities.HandleWaitForCampSpot 10
-		Actor["${_NamedNPC}"]:DoTarget
-		wait 50
-		oc !ci -SetCS_BehindNPC NotFighter ${Target.ID} 3
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-52.800659,1.621083,-1.679839"
+		call Movetoloc "-63.247490,0.002500,-28.293776"
+		call Movetoloc "-54.548958,3.731771,-42.317493"
+		call Movetoloc "-37.465611,9.905511,-65.736290"
+		call Movetoloc "-6.147725,8.082129,-75.134834"
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+		wait 20
+		call Movetoloc "-19.044220,8.082129,-89.694466"
+		call HandleNamed
+		return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷             NAMED 3 - Crystasha             ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named3(string _NamedNPC="Doesnotexist")
+	{
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-35.510521,8.774971,-105.074020"
+		call Movetoloc "-94.799835,20.081867,-106.204926"
+		call Movetoloc "-97.316589,19.577530,-135.973816"
+		call Movetoloc "-102.731461,20.023849,-144.863510"
 		call Obj_OgreUtilities.HandleWaitForCombat
-		call Obj_OgreUtilities.WaitWhileGroupMembersDead
-		wait 50
-	}
-
-function FightQueen()
-{
-	;Move to pool
-	eq2execute /g Guys - everyone in the pool!
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	eq2execute /target_none
-	
-	;Aggro other mobs
-	eq2execute /g Grabbing the adds
-	call CampSpotAt ${Me.Name} -230.60 13.87 62.19
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-230.60,13.87,62.19]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	
-	;Move to pool
-	eq2execute /g And back to pool!
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	eq2execute /target_none
-	
-	;Wait to let people catch up and kill the mobs
-	wait 300
-	wait ${Math.Rand[100]}
-	
-	;Default sticktopool is false, which means first person to get here become the main actor in this encounter.
-	if !${stickToPool}
-	{
-		;Tell everyone else to stay back.
-		relay ${mythRG} echo \${Script[EpicRepercussions].VariableScope.stickToPool:Set[TRUE]}
-		wait 10
-		stickToPool:Set[FALSE]
-	
-	
-		eq2execute /g Aggroing Queen
-		;Aggro Queen
-		;call CampSpotAt ${Me.Name} -233.18 18.87 85.97
-		while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-233.18,18.87,85.97]} > 5
-		{
-			oc !ci -FlyUp ${Me.Name}
-			call CheckQueen
-			call GetOutOfWater
-			target me
-			wait 5
-			oc !ci -LetsGo ${Me.Name}
-			relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -233.18 18.87 85.97
-		}
-		oc !ci -FlyStop ${Me.Name}
 		wait 20
-		
-		;Move to top of stairs for easy retreat to pool
-		eq2execute /g Getting read to jump in pool
-		oc !ci -LetsGo ${Me.Name}
-		target me
-		wait 5
-		while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-232.05,18.87,69.20]} > 5
-		{
-			call CheckQueen
-			call GetOutOfWater
-			target me
-			if !${Script[OgreMove_Modified](exists)}
-			{
-				oc !ci -LetsGo ${Me.Name}
-				relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -232.05 18.87 69.20
-			}
-			wait 1
-		}
-		
-		
-		eq2execute /g Getting her to 90
-		;Get Queen down to 90
-		target Queen
-		;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-		while ${queenUp} && ${Actor[Queen].Health} >= 90
-		{
-			call CheckQueen
-			if !${Target.Name.Find[Queen](exists)}
-			{
-				target Queen
-			}
-			call GetOutOfWater
-			if ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-232.05,18.87,69.20]} > 3
-			{
-				target me
-				oc !ci -LetsGo ${Me.Name}
-				relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -232.05 18.87 69.20
-			}
-			;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-			waitframe
-		}
-	}
-	eq2execute /g Back to pool at 90
-	;back to pool
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	wait 150
-	target Queen
-	if !${stickToPool}
-	{
-		eq2execute /g Queen to 60!
-		;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-		while ${queenUp} && ${Actor[Queen].Health} >= 60
-		{
-			call CheckQueen
-			if !${Target.Name.Find[Queen](exists)}
-			{
-				target Queen
-			}
-			call GetOutOfWater
-			if ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-232.05,18.87,69.20]} > 3
-			{
-				target me
-				oc !ci -LetsGo ${Me.Name}
-				relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -232.05 18.87 69.20
-			}
-			;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-			waitframe
-		}
-		oc !ci -FlyStop ${Me.Name}
-	}
-	eq2execute /g Back to pool 60
-	;back to pool
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	wait 150
-	target Queen
-	if !${stickToPool}
-	{
-		;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-		eq2execute /g Queen to 30!
-		while ${queenUp} && ${Actor[Queen].Health} >= 30
-		{
-			call CheckQueen
-			if !${Target.Name.Find[Queen](exists)}
-			{
-				target Queen
-			}
-			call GetOutOfWater
-			if ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-232.05,18.87,69.20]} > 3
-			{
-				target me
-				oc !ci -LetsGo ${Me.Name}
-				relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -232.05 18.87 69.20
-			}
-			;call CampSpotAt ${Me.Name} -232.05 18.87 69.20
-			waitframe
-		}
-		oc !ci -FlyStop ${Me.Name}
-	}
-	eq2execute /g Back to pool 30
-	;back to pool
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	wait 150
-	eq2execute /g Queen to 10, stayin pool
-	target Queen
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Actor[Queen].Health} >= 10 && !${Actor[conch](exists)}
-	{
-		call CheckQueen
-		if !${Target.Name.Find[Queen](exists)}
-		{
-			target Queen
-		}
-		call GetOutOfWater
-		waitframe
-	}
-	;back to pool
-	eq2execute /g Back to pool 10
-	call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-	while ${queenUp} && ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-229.06,12.24,50.41]} > 4
-	{
-		call CheckQueen
-		call GetOutOfWater
-		wait 5
-	}
-	
-	eq2execute /g Waiting for Queen to be gone
-	while ${queenUp}
-	{
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 20
+		call Obj_OgreUtilities.HandleWaitForCombat
+		wait 20
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
 		wait 100
-		call CheckQueen
-		call GetOutOfWater
-		eq2execute /g Waiting for conch or queen to be gone
-		while ${Actor[conch](exists)} && ${queenUp}
-		{
-			call CheckQueen
-			call GetOutOfWater
-			target me
-			oc !ci -LetsGo ${Me.Name}
-			oc !ci -FlyUp ${Me.Name}
-			wait 4
-			oc !ci -Pause ${Me.Name}
-			relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc ${Actor[conch].X} ${Actor[conch].Y} ${Actor[conch].Z}
-			wait 20
-			target conch
-			wait 3
-			eq2execute "/apply_verb ${Actor[conch].ID} Gather"
-			wait 50
-			oc !ci -Resume ${Me.Name}
-		}
-		
-		eq2execute /g Run back to the pool~!
-		oc !ci -Pause ${Me.Name}
-		relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -217.65 12.94 46.81
-		while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-217.65,12.94,46.81]} > 5 && ${queenUp}
-		{
-			call CheckQueen
-			call GetOutOfWater
-			target me
-			wait 20
-			relay ${Me.Name} runscript "${Script.CurrentDirectory}/OgreMove_Modified" loc -217.65 12.94 46.81
-		}
-		oc !ci -Resume ${Me.Name}
-		wait 5
-		eq2execute /target_none
-		call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-		wait 100
-		
-		eq2execute /g Using conch
-		while ${Me.Inventory[conch](exists)} && ${queenUp}
-		{
-			call CheckQueen
-			Me.Inventory[conch]:Use
-			wait 10
-		}
-		wait 200
+		call HandleNamed
+		return TRUE
 	}
-}
 
-function GetOutOfWater()
-{
-	echo GetOutOfWater Dead:${Me.ToActor.IsDead} InWater:${Me.Y}<-10
-	if ${Me.ToActor.IsDead}
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷             NAMED 4 - Judithania             ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named4(string _NamedNPC="Doesnotexist")
 	{
-		echo In ifDead
-		wait 100
-		if ${Me.ToActor.IsDead}
-		{
-			In secondIfDead
-			oc !ci -Revive ${Me.Name}
-			wait 200
-			
-			;Crystasha
-			call MovementManager -95.11 19.57 -125.07 "Vasty Deep: The Vestigial Cella" ${wGroup} FALSE ${ignoreDistance} ${ignoreHealth} ${minLevel} ${maxLevel} ${minMobs}
-			;Snakes
-			call MovementManager -201.27 12.17 -86.18 "Vasty Deep: The Vestigial Cella" ${wGroup} FALSE ${ignoreDistance} ${ignoreHealth} ${minLevel} ${maxLevel} ${minMobs}
-			;Queen Room
-			call MovementManager -257.36 10.00 39.59 "Vasty Deep: The Vestigial Cella" ${wGroup} FALSE ${ignoreDistance} ${ignoreHealth} ${minLevel} ${maxLevel} ${minMobs}
-			
-			call FightQueen
-		}
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-100.504974,20.139311,-145.099960"
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 20
+		call Movetoloc "-148.472397,20.002501,-148.152542"
+        Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call HandleNamed
+		return TRUE
 	}
-	elseif ${Me.Y} < -10
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷             NAMED 5 - Kraitenae             ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function:bool Named5(string _NamedNPC="Doesnotexist")
 	{
-		oc !ci -Resume ${Me.Name}
-		echo In IfInWater
-		if ${Me.Z} < 50
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-151.825760,18.360945,-129.270340"
+		call Movetoloc "-153.361511,12.214003,-93.893852"
+		call Movetoloc "-173.035599,10.575760,-76.653526"
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+        wait 20
+		call Movetoloc "-193.455460,10.560400,-84.988495"
+		call HandleNamed
+		return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷             NAMED 6 - Queen Gwarthlea             ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================	
+	function:bool Named6(string _NamedNPC="Doesnotexist")
+	{
+        echo ${Time}: Moving to ${_NamedNPC}
+		call Movetoloc "-196.593231,12.256557,-71.132263"
+		call Movetoloc "-207.108704,13.132140,-55.204216"
+		call Movetoloc "-215.914825,20.164740,-22.683764"
+		call Movetoloc "-220.310532,20.358646,-12.986840"
+		call Movetoloc "-256.912231,20.834169,-14.447024"
+		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
+		wait 20
+		call Movetoloc "-255.363876,10.002501,43.635513"
+		call Movetoloc "-203.464874,10.002500,26.790241"
+		OgreBotAPI:FlyUp["${Me.Name}"]
+		call Movetoloc "-230.126450,13.874684,61.802319"
+		Ob_AutoTarget:AddActor["Ca'Na destructia suprema",0,FALSE,FALSE]
+		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
+		Obj_OgreIH:ChangeCampSpot["-231.719086,18.874693,70.376282"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		eq2execute target Queen Gwarthlea
+		wait 5
+		Obj_OgreIH:ChangeCampSpot["-228.747406,11.773949,51.470982"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		wait 250
+		oc !c -ChangeCampSpotWho ${Me.Name} -206.528061 10.002501 30.679688
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+		
+		oc !c -Pause igw:${Me.Name}
+        wait 5
+		eq2execute target Delahnus the Dauntless
+		wait 5
+		relay all eq2execute h
+		wait 5
+        oc !c -Resume igw:${Me.Name}
+        wait 5
+		eq2execute Target_None
+		oc !c -ChangeCampSpotWho ${Me.Name} -228.747406 11.773949 51.470982
+		call Obj_OgreUtilities.HandleWaitForCampSpot 20
+
+		if ${Actor["Queen Qwarthlea"].Health} <= 84
 		{
-			target me
-			if ${Me.X} > -230
-			{
-				call CampSpotAt ${Me.Name} -184.61 -74.16 37.29
-				while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-184.61,-74.16,37.29]} > 4 && !${Me.ToActor.IsDead}
-				{
-					wait 5
-				}
-			}
-			call CampSpotAt ${Me.Name} -231.06 -74.99 25.71
-			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-231.06,-74.99,25.71]} > 4 && !${Me.ToActor.IsDead}
-			{
-				wait 5
-			}
-			call CampSpotAt ${Me.Name} -257.63 -74.98 67.69
-			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-257.63,-74.98,67.69]} > 4 && !${Me.ToActor.IsDead}
-			{
-				wait 5
-			}
+			Obj_OgreIH:ChangeCampSpot["-229.276764,12.083661,55.786449"]
+			eq2execute target Ca'Na destructia suprema
+		}
+		if ${Actor["Queen Qwarthlea"].Health} <= 30
+		{
+			Obj_OgreIH:ChangeCampSpot["-226.067184,12.001571,46.506889"]
+			eq2execute target Ca'Na destructia suprema
+		}
+
+		call HandleNamed
+		OgreBotAPI:FlyStop["${Me.Name}"]
+		return TRUE
+	}
+
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷                  FUNCTIONS                 ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+	function CheckASpecificZone(string _ZoneName)
+	{
+		variable persistentref ICARef
+		ICARef:SetReference["Script[${OgreInstanceControllerAssisterScriptName}].VariableScope.Obj_OgreUtilities.Obj_ZoneReset"]
+
+		if ${ICARef.Get_ZoneData_GV[gcsRetValue,"${_ZoneName}"]}
+		{
+			echo Same zone (${_ZoneName}): ${Zone.Name.Equal["${_ZoneName}"]}
+			echo IsSet ${gcsRetValue.Element["IsSet"]}
+			echo Resettable ${gcsRetValue.Element["Resettable"]}
+			echo TimeLeft ${gcsRetValue.Element["TimeLeft"]}
+			echo TextTimeLeft ${gcsRetValue.Element["TextTimeLeft"]}
 		}
 		else
+			echo GetZoneData was false
+	}
+
+	function:bool CheckZoneResetStatus()
+	{
+		echo ${Time}: Entering CheckZoneResetStatus
+		Ogre_Instance_Controller_Assister:PopulateInternalMemory
+		wait 2
+		while ${Ogre_Instance_Controller_Assister.bPopulateInternalMemoryRunning}
+		wait 2
+	   
+		call CheckASpecificZone "${sZoneName}"
+		
+		echo ${Time}: Is the zone able to be reset? [${gcsRetValue.Element["Resettable"]}]
+		if !${gcsRetValue.Element["Resettable"]}
 		{
-			target me
-			call CampSpotAt ${Me.Name} -234.28 -74.84 125.40
-			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-234.28,-74.84,125.40]} > 4 && !${Me.ToActor.IsDead}
+			iZoneResetTime:Set[${Math.Calc[${Time.Timestamp}+${gcsRetValue.Element["TimeLeft"]}+5].Int}]
+			echo ${Time}: \arWaiting until zone can be reset. [${Math.Calc[${iZoneResetTime}-${Time.Timestamp}].Int} seconds] [${Math.Calc[(${iZoneResetTime}-${Time.Timestamp})/60].Int} minutes]
+			while ${Time.Timestamp} < ${iZoneResetTime}
 			{
-				wait 5
-			}
-		}
-		while ${Me.Y} < -10 && !${Me.ToActor.IsDead}
-		{
-			call CampSpotAt ${Me.Name} -225.38 -73.02 71.36
-			while ${Math.Distance[${Me.X},${Me.Y},${Me.Z},-225.38,-73.02,71.36]} > 4 && !${Me.ToActor.IsDead} && ${Me.Y} < -50
-			{
-				wait 5
+				;echo ${Time}: Time remaining until reset: [${Math.Calc[${iZoneResetTime}-${Time.Timestamp}].Int} seconds] [${Math.Calc[(${iZoneResetTime}-${Time.Timestamp})/60].Int} minutes]
+				wait 50
 			}
 			
-			target me
-			wait 3
-			eq2execute /target_none
-			call CampSpotAt ${Me.Name} -229.06 12.24 50.41
-			variable int startTime = 0
-			startTime:Set[${Time.Timestamp}]
-			while ${Math.Calc[${Time.Timestamp} - ${startTime}]} < 10
-			{
-				if ${Me.Y} >= -10
-				{
-					eq2execute /target_none
-					return
-				}
-				waitframe
-			}
-		}
-		if ${queenUp} && !${Actor[namednpc,Queen].Target(exists)} && !${Me.ToActor.IsDead}
+			echo ${Time}: \agZone can now be reset!	
+			return TRUE
+		}			
+	}
+	
+	function:bool ResetZone()
+	{
+		echo ${Time}: Entering ResetZone
+		if ${Zone.ShortName.Equal["${sZoneShortName}"]} && ${Zone.Name.Equal["${sZoneName}"]}
 		{
-			;encounter has been reset...
-			call FightQueen
+			echo ${Time}: I am still in ${sZoneName} and I can reset it. Zoning out to reset.
+			oc !c -cfw igw:${Me.Name} -Zone
+			call Obj_OgreUtilities.HandleWaitForZoning
+
+			if !${Return}
+			{
+				Obj_OgreIH:Message_FailedZone
+				return FALSE
+			}
+			
+			wait 100
 		}
-		eq2execute /target_none
+		
+		echo ${Time}: Resetting the zone.
+		relay all OgreBotAPI:ResetZone["igw:${Me.Name}","${sZoneName}"]
+		wait 20
+		
+		echo ${Time}: Checking to see if the zone reset was successful.
+		call This.CheckZoneResetStatus
+		if !${Return}
+		{
+			echo ${Time}: Failed to reset zone.
+			oc Failed to reset zone.
+			return FALSE
+		}
+		
+		return TRUE
+	}
+
+	function Movetoloc(point3f loc)
+	{
+		Obj_OgreIH:SetCampSpot
+		Obj_OgreIH:ChangeCampSpot["${loc}"]
+		call Obj_OgreUtilities.HandleWaitForCampSpot 5
+		call Obj_OgreUtilities.HandleWaitForGroupDistance 3
+		call Obj_OgreIH.KillActorType 5
+		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		eq2execute summon
+	}
+
+	function PostNamed()
+	{
+		call Obj_OgreUtilities.HandleWaitForCampSpot 10
+		call Obj_OgreUtilities.HandleWaitForCombat
+		call Obj_OgreUtilities.HandleWaitForCombatWithNPC
+		call Obj_OgreIH.KillActorType 10
+        eq2execute summon
+		call Obj_OgreUtilities.WaitForLootWindow
+		call Obj_OgreUtilities.WaitWhileGroupMembersDead
+		wait 10
+	}
+
+	function HandleNamed()
+	{
+		if !${Actor[exactname,"${_NamedNpc}"].ID(exists)}
+		{
+			Obj_OgreIH:Message_NamedDoesNotExistSkipping["${_NamedNpc}"]
+		}
+    
+        wait 20
+        if ${Me.InCombat}
+        {
+            while ${Me.InCombat}
+                waitframe
+        }
+		call PostNamed
+	}
+
+	function ManaarQuest()
+	{
+		oc !c -Pause igw:${Me.Name}
+        wait 5
+		relay all eq2execute target Alia
+		wait 10
+		relay all eq2execute h
+		wait 10
+		oc !ci -OptNum 3 igw:${Me.Name}
+		wait 10
+		oc !ci -OptNum 1 igw:${Me.Name}
+		wait 10
+		oc !ci -OptNum 1 igw:${Me.Name}
+		wait 10
+        oc !c -Resume igw:${Me.Name}
+        wait 5
+		eq2execute Target_None
 	}
 }
 
-function CheckQueen()
+;================================================================================
+; ˏˋ°•*⁀➷ˏˋ°•*⁀➷                    ATOMS                   ˏˋ°•*⁀➷ˏˋ°•*⁀➷
+;================================================================================
+atom atexit()
 {
-	if ${Actor[namednpc,Queen](exists)}
-	{
-		queenUp:Set[TRUE]
-		if ${queenAggro} && !${Actor[namednpc,Queen].Target(exists)}
-		{
-			;encounter must have reset
-			queenAggro:Set[FALSE]
-			call FightQueen
-			wait 50
-		}
-		elseif !${queenAggro} && ${Actor[namednpc,Queen].Target(exists)}
-		{
-			queenAggro:Set[TRUE]
-		}
-	}
-	else 
-	{
-		wait 50
-		if !${Actor[namednpc,Queen](exists)}
-		{
-			queenUp:Set[FALSE]
-		}
-	}
+	echo ${Time}: \agFinished auto-running ${sZoneName}.
 }
