@@ -1,5 +1,5 @@
 ;================================================================================
-; Title: Vasty Deep: The Conservatory | Author: The Marty Party | Date: 15 Mar 2024 | Version: 1.1
+; Title: Vasty Deep: The Conservatory | Author: The Marty Party | Date: 15 Mar 2024 | Version: 1.2
 ;================================================================================
 
 variable string sZoneShortName="exp06_dun_vastydeep01"
@@ -32,7 +32,7 @@ objectdef Object_Instance
 				return FALSE
 			}
 
-			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.1
+			echo ${Time}: \agStarting to auto-run ${sZoneName}. Version: 1.2
 					
         	Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",TRUE]
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_settings_disableabilitycollisionchecks",TRUE]
@@ -128,7 +128,8 @@ objectdef Object_Instance
 			oc !ci -FlyStop igw:${Me.Name}
 			call Movetoloc "-20.650038,-7.497500,-52.822102"
 			call Movetoloc "-5.289650,-7.497500,-25.833633"
-			call Movetoloc "-4.935075,-7.497500,-8.369521"
+			call Movetoloc "-4.777812,-7.497500,-2.683846"
+			call ManaarQuest
 			call Movetoloc "4.562288,-7.457947,0.274465"
 			
 			Obj_OgreIH:ChangeOgreBotUIOption["checkbox_autotarget_outofcombatscanning",FALSE]
@@ -158,6 +159,11 @@ objectdef Object_Instance
     function:bool Named1(string _NamedNPC="Doesnotexist")
 	{
         echo ${Time}: Skipping snake and moving to ${_NamedNPC}
+		call Movetoloc "-13.240000,-7.497500,-34.709999"
+		call Movetoloc "-5.110769,-7.497500,-28.472933"
+		call Movetoloc "-4.868572,-7.497500,-1.058241"
+		call ManaarQuest
+		call Movetoloc "-5.659779,-7.497500,-25.723251"
 		call Movetoloc "-13.240000,-7.497500,-33.709999"
 		call Movetoloc "-17.580063,-7.497500,-51.378273"
 		call Movetoloc "-10.340768,-7.497500,-67.829330"
@@ -243,7 +249,7 @@ objectdef Object_Instance
 		OgreBotAPI:CastAbility_Relay["all","Tortoise Shell"]
 		wait 20
 		call Movetoloc "127.844711,90.542000,87.977165"
-		Ob_AutoTarget:AddActor["a topiaric ripper",0,FALSE,FALSE]
+		Ob_AutoTarget:AddActor["a topiaric ripper",0,FALSE,TRUE]
 		Ob_AutoTarget:AddActor["${_NamedNPC}",0,FALSE,FALSE]
 		wait 30
 		call HandleNamed
@@ -416,6 +422,25 @@ objectdef Object_Instance
 				wait 10                
 			}
 		}
+	}
+
+	function ManaarQuest()
+	{
+		oc !c -Pause igw:${Me.Name}
+        wait 5
+		relay all eq2execute target Alia
+		wait 10
+		relay all eq2execute h
+		wait 10
+		oc !ci -OptNum 1 igw:${Me.Name}
+		wait 10
+		oc !ci -OptNum 1 igw:${Me.Name}
+		wait 10
+		oc !ci -OptNum 1 igw:${Me.Name}
+		wait 10
+        oc !c -Resume igw:${Me.Name}
+        wait 5
+		eq2execute Target_None
 	}
 }
 
